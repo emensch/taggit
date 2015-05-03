@@ -1,1 +1,16 @@
-.modal-footer {   border-top: 0px; }
+.modal-footer {  
+    border-top: 0px;
+}
+
+#error{
+    color:red;
+}
+
+#form-subtext{
+    color:#888;
+    padding-left:17px;
+}
+
+body {
+  padding-top: 70px;
+}
