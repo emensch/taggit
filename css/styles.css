@@ -14,3 +14,8 @@
 body {
   padding-top: 70px;
 }
+
+#primary-content{
+    float:none;
+    margin: 0 auto"
+}
