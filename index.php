@@ -20,23 +20,58 @@ $app->group('/api', function() use ($app) {
         });
 
         $app->get('/:id', function ($id) {
-            echo "User with ID: $id";
+            echo "User with $id";
         });
 
         $app->get('/:id/posts', function ($id) {
-           echo "User with ID: $id's posts"; 
+            // Dummy data
+            $result = array(
+                array(
+                    "ID" => 1, "userID" => 10, "title" => "Post 1", "link" => "https://www.google.com/",
+                    "body" => "Lorem ipsum dolor sit whateverthefuck", "commentCount" => 3, 
+                    "dateTime" => "2015-05-04 12:20:13"
+                    ),
+                array(
+                    "ID" => 2, "userID" => 10, "title" => "Post 2", "link" => "https://www.google.com/",
+                    "body" => "Lorem ipsum dolor sit whateverthefuck", "commentCount" => 2, 
+                    "dateTime" => "2015-05-03 12:22:13"
+                    )        
+            );
+            echo json_encode($result);
         });
 
         $app->get('/:id/frontpage', function ($id) {
-            
+            // Dummy data
+            $result = array(
+                array(
+                    "ID" => 1, "userID" => 10, "title" => "Post 1", "link" => "https://www.google.com/",
+                    "body" => "Lorem ipsum dolor sit whateverthefuck", "commentCount" => 3, 
+                    "dateTime" => "2015-05-04 12:20:13"
+                    ),
+                array(
+                    "ID" => 2, "userID" => 10, "title" => "Post 2", "link" => "https://www.google.com/",
+                    "body" => "Lorem ipsum dolor sit whateverthefuck", "commentCount" => 2, 
+                    "dateTime" => "2015-05-03 12:22:13"
+                    )        
+            );
+            echo json_encode($result);            
         });
 
         $app->get('/:id/tags', function ($id) {
-            
+            // Dummy data
+            $result = array(
+                array(
+                    "ID" => 1, "name" => "tag1"
+                    ),
+                array(
+                    "ID" => 2, "name" => "tag2"
+                    )        
+            );
+            echo json_encode($result);           
         });
 
         $app->get('/:id/comments', function ($id) {
-            
+              
         });
 
         $app->post('/', function() {
