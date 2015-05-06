@@ -25,3 +25,7 @@ a:hover{
     border-bottom:none;
     text-decoration: none;
 }
+
+#taglist:hover{
+    color:black;
+}
