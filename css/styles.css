@@ -19,3 +19,9 @@ body {
     float:none;
     margin: 0 auto"
 }
+
+a:hover{
+    color: deepskyblue;
+    border-bottom:none;
+    text-decoration: none;
+}
