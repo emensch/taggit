@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="taggit">
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 		<meta charset="utf-8">
@@ -23,8 +23,7 @@
 	</head>
     
     
-	<body>
-        
+	<body ng-controller="taggitController">
         <!--        Start NavBar        -->  
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 
@@ -41,7 +40,7 @@
             <div class="collapse navbar-collapse">
                 
                 <ul class="nav navbar-nav">
-                    <li><a href="#">tag1</a></li>
+                    <li><a href="#">{{ greeting }}</a></li>
                     <li><a href="#">tag2</a></li>
                     <li><a href="#">tag3</a></li>
                 </ul>
@@ -162,5 +161,7 @@
 	<!-- script references -->
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+        <script src="js/app.js"></script>
 	</body>
 </html>
