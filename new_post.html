@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <title>taggit | new post</title>
+        <meta name="generator" content="Bootply" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+        <!-- Bootstrap -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+
+        <!--[if lt IE 9]>
+<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+        <!-- Custom Styles -->
+        <link href="css/styles.css" rel="stylesheet">
+
+        <!-- Font Awesome CSS -->
+        <link href="css/font-awesome.css" rel="stylesheet">
+
+    </head>
+
+
+    <body>
+
+        <!--        Start NavBar        -->  
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" rel="home" href="frontpage.html">taggit</a>
+            </div>
+
+            <div class="collapse navbar-collapse">
+
+                <ul class="nav navbar-nav">
+                    <li><a href="#">tag1</a></li>
+                    <li><a href="#">tag2</a></li>
+                    <li><a href="#">tag3</a></li>
+                </ul>
+
+
+                <div class="col-sm-3 col-sm-5 pull-right">
+                    <form class="navbar-form" role="search">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term">
+                            <div class="input-group-btn">
+                                <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                                <button class="btn btn-default dropdown-toggle" type="button" data-toggle = "dropdown" >
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu" role = "menu">
+                                    <li><a href="#">tag</a></li>
+                                    <li><a href="#">user</a></li>
+                                    <li><a href="#">content</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class=" pull-right">
+                    <ul class="nav navbar-nav">
+                        <li><a href="user_posts.html">welcome (user)!</a></li>
+                        <li><a href="index.html">sign out</a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+        <!--        End NavBar      -->
+
+
+        <div class="container-fluid">
+
+            <!--        Start Body      -->
+            <div class="row">
+                <div class="col-sm-8" style="float:none; margin: 0 auto">
+                    <h3> New post </h3>
+
+                    <div class="form-group">
+                        <input type="text" class="form-control input-lg" placeholder="Title">
+                    </div>
+
+
+                    <div class="form-group">
+                        <textarea class = "form-control input-lg" placeholder="Say something!" rows="10"></textarea>
+
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" class="form-control input-lg" placeholder="Tags (seperated by commas)">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <a class="btn btn-primary btn-lg btn-block" href = "comments.html">Submit a new post</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <hr>
+            <!--    Begin Footer        -->
+            <div class="col-md-8" style="float:none; margin: 0 auto">
+                <footer>
+                    <div class="row" >
+                        <div class="col-lg-12">
+                            <p>Copyright &copy; MFK Softworks 2015 </p>
+                        </div>
+
+
+                    </div>
+                </footer>
+
+            </div>
+            <!--    End Footer        -->
+
+        </div>
+
+        <!-- script references -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/style.js"></script>
+    </body>
+</html>

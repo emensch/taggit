@@ -19,13 +19,24 @@ body {
     float:none;
     margin: 0 auto"
 }
+a{
+    border-bottom:none;   
+}
 
 a:hover{
     color: deepskyblue;
-    border-bottom:none;
     text-decoration: none;
 }
 
 #taglist:hover{
     color:black;
+}
+
+.post-list{
+    list-style-type: none;  
+    padding-left:0;
+}
+
+#submit-button{
+    color:white
 }
