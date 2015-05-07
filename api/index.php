@@ -19,14 +19,12 @@ $app->group('/v1', function() use ($app) {
                 array(
                     "username" => "donkusking",
                     "score" => 10,
-                    "tagNames" => array("tag1", "tag2"),
-                    "tagIDs" => array(101, 102)
+                    "tags" => array(array("name" => "tag1", "id" => 102), array("name" => "tag1", "id" => 102))
                     ),
                     array(
                     "username" => "donkusfranchi",
                     "score" => 123,
-                    "tagNames" => array("tag2", "tag3"),
-                    "tagIDs" => array(102, 103)
+                    "tags" => array(array("name" => "tag1", "id" => 101), array("name" => "tag2", "id" => 102))
                     )
             );
             echo json_encode($result);  
@@ -37,8 +35,7 @@ $app->group('/v1', function() use ($app) {
                 array(
                     "username" => "donkusking",
                     "score" => 10,
-                    "tagNames" => array("tag1", "tag2"),
-                    "tagIDs" => array(101, 102)
+                    "tags" => array(array("name" => "tag1", "id" => 101), array("name" => "tag2", "id" => 102))
                     )
             );
             echo json_encode($result);
@@ -54,8 +51,7 @@ $app->group('/v1', function() use ($app) {
                     "numComments" => 7,
                     "editedOn" => "2015-05-03 12:22:13",
                     "dateTime" => "2015-03-02 12:23:34",
-                    "tagNames" => array("tag1", "tag2"),
-                    "tagIDs" => array(101, 102)
+                    "tags" => array(array("name" => "tag3", "id" => 103), array("name" => "tag1", "id" => 101))
                     ),
                 array(
                     "authorName" => "donkusking",
@@ -65,8 +61,7 @@ $app->group('/v1', function() use ($app) {
                     "numComments" => 3,
                     "editedOn" => "",
                     "dateTime" => "2015-03-04 14:13:22",
-                    "tagNames" => array("tag2", "tag3"),
-                    "tagIDs" => array(102, 103)
+                    "tags" => array(array("name" => "tag2", "id" => 102), array("name" => "tag1", "id" => 101))
                     )       
             );
             echo json_encode($result);
@@ -83,8 +78,7 @@ $app->group('/v1', function() use ($app) {
                     "numComments" => 7,
                     "editedOn" => "2015-05-03 12:22:13",
                     "dateTime" => "2015-03-02 12:23:34",
-                    "tagNames" => array("tag1", "tag2", "tag3"),
-                    "tagIDs" => array(101, 102, 103)
+                    "tags" => array(array("name" => "tag1", "id" => 101), array("name" => "tag2", "id" => 102))
                     ),
                 array(
                     "authorName" => "donkusking",
@@ -95,8 +89,7 @@ $app->group('/v1', function() use ($app) {
                     "numComments" => 5,
                     "editedOn" => "",
                     "dateTime" => "2015-03-04 14:13:22",
-                    "tagNames" => array("tag2", "tag3"),
-                    "tagIDs" => array(102, 103)
+                    "tags" => array(array("name" => "tag1", "id" => 101), array("name" => "tag3", "id" => 103))
                     )       
             );
             echo json_encode($result);          
@@ -148,8 +141,7 @@ $app->group('/v1', function() use ($app) {
                     "numComments" => 7,
                     "editedOn" => "",
                     "dateTime" => "2015-05-2 06:13:09",
-                    "tagNames" => array("tag2", "tag3"),
-                    "tagIDs" => array(102, 103)                    
+                    "tags" => array(array("name" => "tag1", "id" => 101), array("name" => "tag2", "id" => 102))                  
                     )
             ); 
             echo json_encode($result);               
@@ -234,8 +226,7 @@ $app->group('/v1', function() use ($app) {
                     "numComments" => 7,
                     "editedOn" => "2015-05-03 12:22:13",
                     "dateTime" => "2015-03-02 12:23:34",
-                    "tagNames" => array("tag1", "tag2", "tag3"),
-                    "tagIDs" => array(101, 102, 103)
+                    "tags" => array(array("name" => "tag1", "id" => 101), array("name" => "tag2", "id" => 102))
                     ),
                 array(
                     "authorName" => "donkusking",
@@ -246,8 +237,7 @@ $app->group('/v1', function() use ($app) {
                     "numComments" => 7,
                     "editedOn" => "",
                     "dateTime" => "2015-03-04 14:13:22",
-                    "tagNames" => array("tag2", "tag3"),
-                    "tagIDs" => array(102, 103)
+                    "tags" => array(array("name" => "tag1", "id" => 101), array("name" => "tag3", "id" => 103))
                     )       
             );
             echo json_encode($result); 
