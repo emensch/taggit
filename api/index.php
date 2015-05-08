@@ -10,109 +10,81 @@ $app->get('/', function() {
     echo "Welcome to Taggit!";
 });
 
-// v1 group //
+// v1 group 
 $app->group('/v1', function() use ($app) {
     // Users group
     $app->group('/users', function() use ($app) {
         $app->get('/', function () {
-            $result = array(
-                array(
-                    "username" => "donkusking",
-                    "score" => 10,
-                    "tags" => array(array("name" => "tag1", "id" => 102), array("name" => "tag1", "id" => 102))
-                    ),
-                    array(
-                    "username" => "donkusfranchi",
-                    "score" => 123,
-                    "tags" => array(array("name" => "tag1", "id" => 101), array("name" => "tag2", "id" => 102))
-                    )
-            );
-            echo json_encode($result);  
+            $result = array();
+            $sql = "SELECT ID, name, score FROM Users ORDER BY name";
+            $sql2 = "SELECT Tags.name, Tags.id FROM Subscriptions, Tags 
+                    WHERE Tags.ID = Subscriptions.tagID 
+                    AND Subscriptions.userID = :userID";
+            try { 
+                $db = getConnection();
+                $stmt = $db->prepare($sql);
+                $query = $db->query($sql);
+                foreach($query as $row) {
+                    $stmt2 = $db->prepare($sql2);
+                    $stmt2->bindParam(":userID", $row['ID'], PDO::PARAM_INT);
+                    $stmt2->execute();
+                    $tags = array();
+                    foreach($stmt2 as $row2) {
+                        $tags[] = array("name" => $row2['name'], "id" => $row2['id']);
+                    }
+                    $result[] = array(
+                        "username" => $row['name'],
+                        "score" => $row['score'],
+                        "tags" => $tags
+                    );    
+                }
+            } catch(PDOException $e) {
+                echo $e;
+            }
+            echo json_encode($result);
         });
 
         $app->get('/:id', function ($id) {
-            $result = array(
-                array(
-                    "username" => "donkusking",
-                    "score" => 10,
-                    "tags" => array(array("name" => "tag1", "id" => 101), array("name" => "tag2", "id" => 102))
-                    )
-            );
+            $result = array();
+            $sql = "SELECT ID, name, score FROM Users WHERE ID = :ID";
+            $sql2 = "SELECT Tags.name, Tags.id, Subscriptions.onTop FROM Subscriptions, Tags 
+                    WHERE Tags.ID = Subscriptions.tagID 
+                    AND Subscriptions.userID = :userID";
+            try { 
+                $db = getConnection();
+                $stmt = $db->prepare($sql);
+                $stmt->bindParam(":ID", $id, PDO::PARAM_INT);
+                $stmt->execute();
+                $row = $stmt->fetch();
+
+                $stmt2 = $db->prepare($sql2);
+                $stmt2->bindParam(":userID", $id, PDO::PARAM_INT);
+                $stmt2->execute();
+                $tags = array();
+                foreach($stmt2 as $row2) {
+                    $tags[] = array("name" => $row2['name'], "id" => $row2['id'], "top" => $row2['onTop']);
+                }
+                $result[] = array(
+                    "username" => $row['name'],
+                    "score" => $row['score'],
+                    "tags" => $tags
+                );  
+            } catch(PDOException $e) {
+                echo $e;
+            }
             echo json_encode($result);
         });
 
         $app->get('/:id/posts', function ($id) {
-            $result = array(
-                array(
-                    "authorName" => "donkusking",
-                    "votes" => 12,
-                    "title" => "New song by Wolf Platoon",
-                    "body" => "It's pretty great, IMO. Check it out on torrent trackers near you.",
-                    "numComments" => 7,
-                    "editedOn" => "2015-05-03 12:22:13",
-                    "dateTime" => "2015-03-02 12:23:34",
-                    "tags" => array(array("name" => "tag3", "id" => 103), array("name" => "tag1", "id" => 101))
-                    ),
-                array(
-                    "authorName" => "donkusking",
-                    "votes" => -10,
-                    "title" => "Wolf Platoon no longer a band",
-                    "body" => "Looks like piracy got em, sorry boys.",
-                    "numComments" => 3,
-                    "editedOn" => "",
-                    "dateTime" => "2015-03-04 14:13:22",
-                    "tags" => array(array("name" => "tag2", "id" => 102), array("name" => "tag1", "id" => 101))
-                    )       
-            );
-            echo json_encode($result);
+
         });
 
         $app->get('/:id/frontpage', function ($id) {
-            $result = array(
-                array(
-                    "authorName" => "donkuslord",
-                    "authorID" => 1,
-                    "votes" => 13,
-                    "title" => "I am donkuslord",
-                    "body" => "lord of donks",
-                    "numComments" => 7,
-                    "editedOn" => "2015-05-03 12:22:13",
-                    "dateTime" => "2015-03-02 12:23:34",
-                    "tags" => array(array("name" => "tag1", "id" => 101), array("name" => "tag2", "id" => 102))
-                    ),
-                array(
-                    "authorName" => "donkusking",
-                    "authorID" => 2,
-                    "votes" => 1,
-                    "title" => "I am donkusking",
-                    "body" => "king of donks",
-                    "numComments" => 5,
-                    "editedOn" => "",
-                    "dateTime" => "2015-03-04 14:13:22",
-                    "tags" => array(array("name" => "tag1", "id" => 101), array("name" => "tag3", "id" => 103))
-                    )       
-            );
-            echo json_encode($result);          
+    
         });
 
         $app->get('/:id/comments', function ($id) {
-            $result = array(
-                array(
-                    "authorID" => 1,
-                    "authorName" => "donkusking",
-                    "body" => "This comment sucks",
-                    "editedOn" => "2015-05-04 06:12:12",
-                    "dateTime" => "2015-05-04 05:12:12"
-                    ),
-                    array(
-                    "authorID" => 1,
-                    "authorName" => "donkusking",
-                    "body" => "This comment really sucks",
-                    "editedOn" => "",
-                    "dateTime" => "2015-05-02 06:13:10"
-                    )
-            ); 
-            echo json_encode($result);      
+    
         });
 
         $app->post('/', function() {
@@ -127,44 +99,15 @@ $app->group('/v1', function() use ($app) {
     // Posts group
     $app->group('/posts', function() use ($app) {
         $app->get('/', function () {
-                
+            
         });
 
         $app->get('/:id', function ($id) {
-            $result = array(
-                array(
-                    "authorID" => 2,
-                    "authorName" => "donkusfranchi",
-                    "votes" => 142,
-                    "title" => "gr8postm8",
-                    "body" => "this post is gr8, gr8 gr8 gr8 gr8 gr8 gr8 gr8",
-                    "numComments" => 7,
-                    "editedOn" => "",
-                    "dateTime" => "2015-05-2 06:13:09",
-                    "tags" => array(array("name" => "tag1", "id" => 101), array("name" => "tag2", "id" => 102))                  
-                    )
-            ); 
-            echo json_encode($result);               
+            
         });
 
         $app->get('/:id/comments', function ($id) {
-            $result = array(
-                array(
-                    "authorID" => 1,
-                    "authorName" => "donkusfranchi",
-                    "body" => "comment time deluxe",
-                    "editedOn" => "",
-                    "dateTime" => "2015-05-02, 06:13:09"                   
-                    ),
-                array(
-                    "authorID" => 3,
-                    "authorName" => "donkuslord",
-                    "body" => "comment time super deluxe",
-                    "editedOn" => "",
-                    "dateTime" => "2015-05-03, 06:13:09"                   
-                    )
-            ); 
-            echo json_encode($result);             
+          
         });
 
         $app->post('/', function() {
@@ -202,45 +145,11 @@ $app->group('/v1', function() use ($app) {
     // Tags group
     $app->group('/tags', function() use ($app) {
         $app->get('/', function() {
-            $result = array(
-                array(
-                    "tagName" => "tag1",
-                    "tagID" => 101                
-                    ),      
-                    array(
-                    "tagName" => "tag2",
-                    "tagID" => 102                 
-                    )   
-            );  
-            echo json_encode($result);         
+
         });
 
         $app->get('/:id/posts', function() {
-            $result = array(
-                array(
-                    "authorName" => "donkuslord",
-                    "authorID" => 1,
-                    "votes" => 13,
-                    "title" => "I am donkuslord, lord of donks",
-                    "body" => "lord of donks and things",
-                    "numComments" => 7,
-                    "editedOn" => "2015-05-03 12:22:13",
-                    "dateTime" => "2015-03-02 12:23:34",
-                    "tags" => array(array("name" => "tag1", "id" => 101), array("name" => "tag2", "id" => 102))
-                    ),
-                array(
-                    "authorName" => "donkusking",
-                    "authorID" => 2,
-                    "votes" => 1,
-                    "title" => "I am donkusking",
-                    "body" => "king of donks",
-                    "numComments" => 7,
-                    "editedOn" => "",
-                    "dateTime" => "2015-03-04 14:13:22",
-                    "tags" => array(array("name" => "tag1", "id" => 101), array("name" => "tag3", "id" => 103))
-                    )       
-            );
-            echo json_encode($result); 
+
         });
 
         $app->post('/', function() {
@@ -248,5 +157,15 @@ $app->group('/v1', function() use ($app) {
         });
     });
 });
+
+function getConnection() {
+    $dbhost = "127.0.0.1";
+    $dbuser = "mcgrail_group5";
+    $dbpass = "f1v3@l1v3";
+    $dbname = "mcgrail_group5";
+    $dbh = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass);
+    $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    return $dbh;
+}
 
 $app->run();
