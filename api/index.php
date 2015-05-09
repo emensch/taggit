@@ -7,7 +7,7 @@ require '../Slim/Slim.php';
 $app = new \Slim\Slim();
 
 $app->get('/', function() {
-    echo "Welcome to Taggit!";
+    
 });
 
 // v1 group 
