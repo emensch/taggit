@@ -1,10 +1,10 @@
 var taggit = angular.module('taggit', []);
 
 taggit.controller('taggitController', function($scope, $http) {
-	rootUrl = '/api/v1';
+	rootUrl = 'api/v1';
 	userID = 1;
 
-	$http.get('/api/v1/users/'+userID).
+	$http.get(rootUrl + '/users/'+userID).
 		success(function(data) {
 			$scope.user = data;
 		});
