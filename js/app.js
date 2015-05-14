@@ -22,24 +22,29 @@ taggit.controller('taggitController', function($scope, $http) {
     //    };
 
     $scope.upvote = function(item) {
-        if(item.voted <= 0) {
-            item.voted = 1;   
+        if(item.voted == 0) {
+            item.voted = 1;
+            item.votes += 1;
+        } else if (item.voted == -1){
+            item.voted = 1 
+            item.votes += 2;
         } else {
-            item.voted = 0;   
+            item.voted = 0;
+            item.votes -= 1;
         }
-
     }
 
     $scope.downvote = function(item) {
-        if(item.voted >= 0) {
-            item.voted = -1   
+        if(item.voted == 0) {
+            item.voted = -1 
+            item.votes -= 1;
+        } else if (item.voted == 1){
+            item.voted = -1 
+            item.votes -= 2;
         } else {
-            item.voted = 0;   
+            item.voted = 0;
+            item.votes += 1;
         }
-    }
-
-    $scope.toggle = function(item){
-        item.selected = !item.selected;
     }
 
 })

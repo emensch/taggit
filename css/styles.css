@@ -57,7 +57,7 @@ a:hover{
 }
 
 .up-voted:hover{
-    color:#FF8097;
+/*    color:#FF8097;*/
 }
 
 
@@ -74,7 +74,7 @@ a:hover{
 }
 
 .down-voted:hover{
-    color:#8DC7F0;
+/*    color:#8DC7F0;*/
 }
 
 
@@ -83,6 +83,4 @@ a:hover{
     /*    display: inline-block;*/
     /*    vertical-align: middle;*/
     /*    float: none;*/
-}   
-
-h2
+}
