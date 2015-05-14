@@ -45,12 +45,38 @@ a:hover{
     text-align: center;   
     color:#888;
     font-size:18px;
-/*    line-height: 20px;*/
+    /*    line-height: 20px;*/
 }
+
+.up:hover{
+    color:#FF8097;
+}
+
+.up-voted{
+    color:#FF3D61;
+}
+
+.up-voted:hover{
+    color:#FF8097;
+}
+
 
 .down{
     padding-top:3px;   
 }
+.down:hover{
+    color:#8DC7F0;   
+}
+
+.down-voted{
+    padding-top:3px;
+    color:#48AEF7;   
+}
+
+.down-voted:hover{
+    color:#8DC7F0;
+}
+
 
 .vcenter{
     top: 20px;
