@@ -73,7 +73,7 @@ $app->group('/v1', function() use ($app) {
                     "authorName" => "donkuslord",
                     "authorID" => 1,
                     "votes" => 13,
-                    "voted" => 0,
+                    "voted" => 1,
                     "title" => "I am donkuslord: Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.awefawefawefawefawefawefawefawefawef",
                     "body" => "lord of donks",
                     "numComments" => 7,

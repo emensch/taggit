@@ -108,7 +108,12 @@
 
                         <div class="row">   
                             <div class = "col-xs-1 vcenter">
-                                <div class="voter" ng-class="{true:'up-voted', false:'up'}[{{post.voted}}>0]">
+                                <!--                                <div class="voter" ng-class="{true:'up-voted', false:'up'}[{{post.voted}}>0]">-->
+
+                                <!--                                                                          ng-class="{'up-voted':post.selected} {'up': !post.selected}" -->
+                                <div class="voter" 
+                                     ng-class="{true:'up-voted', false:'up'}[post.voted > 0]"
+                                     ng-click="upvote(post)">
                                     <span class="glyphicon glyphicon-chevron-up"></span>
                                 </div>
 
@@ -116,7 +121,10 @@
                                     <span>{{post.votes}}</span>
                                 </div>
 
-                                <div class="voter" ng-class="{true:'down-voted', false:'down'}[{{post.voted}}<0]">                                    <span class="glyphicon glyphicon-chevron-down"></span>
+                                <div class="voter" ng-class="{true:'down-voted', false:'down'}[post.voted < 0]"
+                                     ng-click="downvote(post)">
+
+                                    <span class="glyphicon glyphicon-chevron-down"></span>
                                 </div>
 
                             </div>
