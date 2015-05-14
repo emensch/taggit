@@ -73,7 +73,7 @@ $app->group('/v1', function() use ($app) {
                     "authorName" => "donkuslord",
                     "authorID" => 1,
                     "votes" => 13,
-                    "title" => "I am donkuslord",
+                    "title" => "I am donkuslord: Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.awefawefawefawefawefawefawefawefawef",
                     "body" => "lord of donks",
                     "numComments" => 7,
                     "editedOn" => "2015-05-03 12:22:13",
@@ -90,7 +90,18 @@ $app->group('/v1', function() use ($app) {
                     "editedOn" => "",
                     "dateTime" => "2015-03-04 14:13:22",
                     "tags" => array(array("name" => "tag1", "id" => 101), array("name" => "tag3", "id" => 103))
-                    )       
+                    ),       
+                array(
+                    "authorName" => "donkusmaster",
+                    "authorID" => 2,
+                    "votes" => 9001,
+                    "title" => "I am donkusmaster: Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.",
+                    "body" => "master of donks",
+                    "numComments" => 5,
+                    "editedOn" => "",
+                    "dateTime" => "2015-03-04 14:13:22",
+                    "tags" => array(array("name" => "tag1", "id" => 101), array("name" => "tag3", "id" => 103))
+                    )
             );
             echo json_encode($result);          
         });

@@ -113,7 +113,7 @@
                                 </div>
 
                                 <div class="voter">
-                                    <span>9001</span>
+                                    <span>{{post.votes}}</span>
                                 </div>
 
                                 <div class="voter down">
@@ -124,7 +124,7 @@
                             <div class="col-xs-11">
                                 <h2><a href = #>{{post.title}}</a></h2>
                                 <p ng-repeat="tag in post.tags" class="pull-right" > 
-                                    <a href = "tag.html"> <span class="label label-default" href> {{ tag.name }} </span> </a>
+                                    <a href = "tag.html"> <span class="label label-default" href> {{tag.name}} </span> </a>
                                 </p>
                                 <ul class="list-inline">
                                     <li><a href="#"><i class="glyphicon glyphicon-time"></i> {{post.dateTime}} </a></li>
@@ -137,74 +137,6 @@
 
                     <!--        End Post        -->
                 </ul>
-
-
-                <!--        Start Post      -->
-                <div class="row">   
-                    <div class = "col-xs-1 vcenter">
-                        <div class="voter up">
-                            <span class="glyphicon glyphicon-chevron-up"></span>
-                        </div>
-
-                        <div class="voter">
-                            <span>9001</span>
-                        </div>
-
-                        <div class="voter down-voted">
-                            <span class="glyphicon glyphicon-chevron-down"></span>
-                        </div>
-
-                    </div>
-                    <div class="col-xs-11">
-
-                        <h2>  <a href = #>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestaawefawefawefawefa awef awefawef.</a></h2>
-                        <p class="pull-right" > 
-                            <a href = "tag.html"> <span class="label label-default" href>tag1</span> </a>
-                            <a href = "tag.html"> <span class="label label-default" href>tag2</span> </a>
-                            <a href = "tag.html"> <span class="label label-default" href>tag2</span> </a> 
-                        </p>
-                        <ul class="list-inline">
-                            <li><a href="#"><i class="glyphicon glyphicon-time"></i> 2 days ago</a></li>
-                            <li><a href="#"><i class="glyphicon glyphicon-user"></i> by (user)</a></li>
-                            <li><a href="#"><i class="glyphicon glyphicon-comment"></i> 2 comments</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <!--        End Post        -->
-
-
-                <!--        Start Post      -->
-                <div class="row">   
-                    <div class = "col-xs-1 vcenter">
-                        <div class="voter up-voted">
-                            <span class="glyphicon glyphicon-chevron-up"></span>
-                        </div>
-
-                        <div class="voter">
-                            <span>9</span>
-                        </div>
-
-                        <div class="voter down">
-                            <span class="glyphicon glyphicon-chevron-down"></span>
-                        </div>
-
-                    </div>
-                    <div class="col-xs-11">
-
-                        <h2>  <a href = #>Pellentesquef.</a></h2>
-                        <p class="pull-right" > 
-                            <a href = "tag.html"> <span class="label label-default" href>tag1</span> </a>
-                            <a href = "tag.html"> <span class="label label-default" href>tag2</span> </a>
-                            <a href = "tag.html"> <span class="label label-default" href>tag2</span> </a> 
-                        </p>
-                        <ul class="list-inline">
-                            <li><a href="#"><i class="glyphicon glyphicon-time"></i> 2 days ago</a></li>
-                            <li><a href="#"><i class="glyphicon glyphicon-user"></i> by (user)</a></li>
-                            <li><a href="#"><i class="glyphicon glyphicon-comment"></i> 2 comments</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <!--        End Post        -->
 
 
             </div>
