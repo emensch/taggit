@@ -1,1 +1,1 @@
-$('.post-list').find('.row:not(:last)').after("<hr>");
+<script>$('.post-list').find('.row:not(:last)').after("<hr>");</script>

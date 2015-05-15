@@ -29,6 +29,12 @@ taggit.config(function($routeProvider) {
         controller  : 'user_tagController'
     })
 
+    // route for the about page
+        .when('/user_comments', {
+        templateUrl : 'pages/user_comments.html',
+        controller  : 'user_commentsController'
+    })
+
 });
 
 taggit.controller('frontController', function($scope){
@@ -45,6 +51,10 @@ taggit.controller('user_postsController', function($scope){
 
 taggit.controller('user_tagController', function($scope){
     $scope.pageClass = 'page-user_tags';   
+});
+
+taggit.controller('user_commentsController', function($scope){
+    $scope.pageClass = 'page-user_comments';   
 });
 
 
