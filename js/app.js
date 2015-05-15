@@ -6,13 +6,13 @@ taggit.config(function($routeProvider) {
     // route for the frontpage
         .when('/', {
         templateUrl : 'pages/front.html',
-        controller  : 'taggitController'
+//        controller  : 'taggitController'
     })
 
     // route for the about page
         .when('/new_post', {
         templateUrl : 'pages/new_post.html',
-        controller  : 'taggitController'
+//        controller  : 'taggitController'
     })
 });
 
