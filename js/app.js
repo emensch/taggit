@@ -16,6 +16,19 @@ taggit.config(function($routeProvider) {
         templateUrl : 'pages/new_post.html',
         controller  : 'new_postController'
     })
+
+    // route for the about page
+        .when('/user_posts', {
+        templateUrl : 'pages/user_posts.html',
+        controller  : 'user_postsController'
+    })
+
+    // route for the about page
+        .when('/user_tags', {
+        templateUrl : 'pages/user_tags.html',
+        controller  : 'user_tagController'
+    })
+
 });
 
 taggit.controller('frontController', function($scope){
@@ -25,6 +38,16 @@ taggit.controller('frontController', function($scope){
 taggit.controller('new_postController', function($scope){
     $scope.pageClass = 'page-new_post';   
 });
+
+taggit.controller('user_postsController', function($scope){
+    $scope.pageClass = 'page-user_posts';   
+});
+
+taggit.controller('user_tagController', function($scope){
+    $scope.pageClass = 'page-user_tags';   
+});
+
+
 
 taggit.controller('taggitController', function($scope, $http) {
     rootUrl = '/api/v1';
