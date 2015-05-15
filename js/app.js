@@ -1,8 +1,25 @@
-var taggit = angular.module('taggit', []);
+var taggit = angular.module('taggit', ['ngRoute']);
+
+taggit.config(function($routeProvider) {
+    $routeProvider
+
+    // route for the frontpage
+        .when('/', {
+        templateUrl : 'pages/front.html',
+        controller  : 'taggitController'
+    })
+
+    // route for the about page
+        .when('/new_post', {
+        templateUrl : 'pages/new_post.html',
+        controller  : 'taggitController'
+    })
+});
 
 taggit.controller('taggitController', function($scope, $http) {
     rootUrl = '/api/v1';
     userID = 1;
+    
 
     $http.get('/api/v1/users/'+userID).
     success(function(data) {
@@ -48,25 +65,3 @@ taggit.controller('taggitController', function($scope, $http) {
     }
 
 });
-
-// create the module and name it scotchApp
-var pageRouter = angular.module('pageRouter', ['ngRoute']);
-
-// configure our routes
-pageRouter.config(function($routeProvider) {
-    $routeProvider
-
-    // route for the frontpage
-        .when('/', {
-        templateUrl : 'pages/front.html',
-        controller  : 'taggitController'
-    })
-
-    // route for the about page
-        .when('/new_post', {
-        templateUrl : 'pages/new_post.html',
-        controller  : 'taggitController'
-    })
-});
-
-angular.bootstrap(document.getElementById("pageRouter"), ['ngRoute']);
