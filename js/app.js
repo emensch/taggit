@@ -1,4 +1,6 @@
-var taggit = angular.module('taggit', ['ngRoute']);
+var taggit = angular.module('taggit',
+                            ['ngRoute',
+                             'ngAnimate']);
 
 taggit.config(function($routeProvider) {
     $routeProvider
@@ -6,20 +8,29 @@ taggit.config(function($routeProvider) {
     // route for the frontpage
         .when('/', {
         templateUrl : 'pages/front.html',
-//        controller  : 'taggitController'
+        controller  : 'frontController'
     })
 
     // route for the about page
         .when('/new_post', {
         templateUrl : 'pages/new_post.html',
-//        controller  : 'taggitController'
+        controller  : 'new_postController'
     })
+});
+
+taggit.controller('frontController', function($scope){
+    $scope.pageClass = 'page-front';   
+});
+
+taggit.controller('new_postController', function($scope){
+    $scope.pageClass = 'page-new_post';   
 });
 
 taggit.controller('taggitController', function($scope, $http) {
     rootUrl = '/api/v1';
     userID = 1;
-    
+
+    $scope.pageClass = 'page-front';   
 
     $http.get('/api/v1/users/'+userID).
     success(function(data) {
