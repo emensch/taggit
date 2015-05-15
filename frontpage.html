@@ -32,7 +32,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" rel="home" href="frontpage.html">taggit</a>
+                <a class="navbar-brand" rel="home" href="/">taggit</a>
             </div>
 
             <div class="collapse navbar-collapse">
@@ -93,60 +93,15 @@
 
         <div class="container-fluid">
 
-            <!--        Start Body      -->
-            <div class="col-md-8" style="float:none; margin: 0 auto">
 
-                <div class="row">
-                    <div class="col-xs-12">
-                        <a class="btn btn-primary btn-lg btn-block" href = "new_post.html">Submit a new post</a>
-                    </div>
-                </div>
-
-                <ul class = "post-list" ng-repeat="post in posts">
-                    <!--        Start Post      -->
-                    <li>
-
-                        <div class="row">   
-                            <div class = "col-xs-1 vcenter">
-                                <div class="voter" 
-                                     ng-class="{true:'up-voted', false:'up'}[post.voted > 0]"
-                                     ng-click="upvote(post)">
-                                    <span class="glyphicon glyphicon-chevron-up"></span>
-                                </div>
-
-                                <div class="voter">
-                                    <span>{{post.votes}}</span>
-                                </div>
-
-                                <div class="voter" ng-class="{true:'down-voted', false:'down'}[post.voted < 0]"
-                                     ng-click="downvote(post)">
-
-                                    <span class="glyphicon glyphicon-chevron-down"></span>
-                                </div>
-
-                            </div>
-                            <div class="col-xs-11">
-                                <h2><a href = #>{{post.title}}</a></h2>
-                                <p ng-repeat="tag in post.tags" class="pull-right" > 
-                                    <a href = "tag.html"> <span class="label label-default" href> {{tag.name}} </span> </a>
-                                </p>
-                                <ul class="list-inline">
-                                    <li><a href="#"><i class="glyphicon glyphicon-time"></i> {{post.dateTime}} </a></li>
-                                    <li><a href="#"><i class="glyphicon glyphicon-user"></i> by {{post.authorName}} </a></li>
-                                    <li><a href="#"><i class="glyphicon glyphicon-comment"></i> {{post.numComments}} </a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </li>
-
-                    <!--        End Post        -->
-                </ul>
-
+            <!--  Begin content injection -->
+            
+            <div id = "pageRouter">
+            <div ng-view>
 
             </div>
-
-            <!--        End Body        -->
-
+            </div>
+            
             <hr>
             <!--    Begin Footer        -->
             <div class="col-md-8" style="float:none; margin: 0 auto">
@@ -169,6 +124,7 @@
         <script src="js/bootstrap.min.js"></script>
         <script src="js/angular.min.js"></script>
         <script src="js/app.js"></script>
-        <script src="js/style.js"></script> 
+        <script src="js/style.js"></script>
+        <script src="js/page_router.js"></script>
     </body>
 </html>
