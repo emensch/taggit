@@ -1,11 +1,11 @@
 <!--begin subnav   -->
 <div class="row ">
-    <div class = "btn-group btn-block btn-group-md">
-        <a id = "posts-button" class="btn btn-primary active" style="width:33%" href = "#user_posts">Posts by {{user[0].username}}</a>
+    <div class = "btn-group btn-block btn-group-md rect">
+        <a id = "posts-button" class="btn btn-primary active rect" style="width:33%" href = "#user_posts">Posts by {{user[0].username}}</a>
 
-        <a id = "comments-button" class="btn btn-primary " style="width:34%" href = "#user_comments">Comments by {{user[0].username}}</a>
+        <a id = "comments-button" class="btn btn-primary rect " style="width:34%" href = "#user_comments">Comments by {{user[0].username}}</a>
 
-        <a id = "tags-button" class="btn btn-primary " style="width:33%" href = "#user_tags">Manage tags</a>
+        <a id = "tags-button" class="btn btn-primary rect" style="width:33%" href = "#user_tags">Manage tags</a>
     </div>
 </div>
 <!--End subnav-->
@@ -43,9 +43,9 @@
                         <a href = "#tag"> <span class="label post-tag" href> {{tag.name}} </span> </a>
                     </p>
                     <ul class="list-inline">
-                        <li><a href="#"><i class="glyphicon glyphicon-time"></i> {{post.dateTime}} </a></li>
+                        <li><p><i class="glyphicon glyphicon-time"></i> {{post.dateTime}} </p></li>
                         <li><a href="#"><i class="glyphicon glyphicon-user"></i> by {{post.authorName}} </a></li>
-                        <li><a href="#"><i class="glyphicon glyphicon-comment"></i> {{post.numComments}} </a></li>
+                        <li><a href="#"><i class="glyphicon glyphicon-comment"></i> view comments ({{post.numComments}}) </a></li>
                     </ul>
                 </div>
             </div>

@@ -2,11 +2,10 @@
         <div class="row">
             <a id = "submit-button" class="btn btn-primary btn-md btn-block" href = "#new_post">Submit a new post</a>
         </div>
+
+
 <div class="col-md-8" style="float:none; margin: 0 auto">
 
-    <div class="row">
-
-    </div>
 
     <ul class = "post-list" ng-repeat="post in posts">
         <!--        Start Post      -->
@@ -33,13 +32,14 @@
                 </div>
                 <div class="col-xs-11">
                     <h2><a href = #>{{post.title}}</a></h2>
+
                     <p ng-repeat="tag in post.tags" class="pull-right" > 
                         <a href = "#tag"> <span class="label post-tag" href> {{tag.name}} </span> </a>
                     </p>
                     <ul class="list-inline">
-                        <li><a href="#"><i class="glyphicon glyphicon-time"></i> {{post.dateTime}} </a></li>
+                        <li><p><i class="glyphicon glyphicon-time"></i> {{post.dateTime}} </p></li>
                         <li><a href="#"><i class="glyphicon glyphicon-user"></i> by {{post.authorName}} </a></li>
-                        <li><a href="#"><i class="glyphicon glyphicon-comment"></i> {{post.numComments}} </a></li>
+                        <li><a href="#"><i class="glyphicon glyphicon-comment"></i> view comments ({{post.numComments}}) </a></li>
                     </ul>
                 </div>
             </div>
