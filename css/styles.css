@@ -54,12 +54,47 @@ a:hover{
     background-color:#888;
     border:none;
     color:white
-
 }
 
-#submit-button:hover{
+#submit-button:hover, #submit-button.active{
     background-color:#f79148;   
 }
+
+#posts-button{
+    background-color:#888;
+    border:none;
+    color:white
+
+}
+
+#posts-button:hover, #posts-button.active{
+    background-color:#d2976d;   
+}
+
+
+#tags-button{
+    background-color:#888;
+    border:none;
+    color:white
+
+}
+
+#tags-button:hover,  #tags-button.active{
+    background-color:#74cb98;   
+}
+
+
+#comments-button{
+    background-color:#888;
+    border:none;
+    color:white
+}
+
+#comments-button:hover,  #comments-button.active{
+    background-color:#bc83a4;   
+}
+
+
 
 
 .voter{

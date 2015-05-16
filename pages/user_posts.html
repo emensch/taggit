@@ -3,11 +3,11 @@
     <div class="row ">
         <div class="col-xs-12 ">
             <div class = "btn-group btn-block btn-group-lg">
-                <a class="btn btn-primary active" style="width:33%" href = "#user_posts">Posts by {{user[0].username}}</a>
+                <a id = "posts-button" class="btn btn-primary active" style="width:33%" href = "#user_posts">Posts by {{user[0].username}}</a>
 
-                <a class="btn btn-primary" style="width:34%" href = "#user_comments">Comments by {{user[0].username}}</a>
+                <a id = "comments-button" class="btn btn-primary" style="width:34%" href = "#user_comments">Comments by {{user[0].username}}</a>
 
-                <a class="btn btn-primary" style="width:33%" href = "#user_tags">Manage tags</a>
+                <a id = "tags-button" class="btn btn-primary " style="width:33%" href = "#user_tags">Manage tags</a>
             </div>
         </div>
 
@@ -42,7 +42,7 @@
                     <h2><a href = #>{{post.title}}</a></h2>
 
                     <p ng-repeat="tag in post.tags" class="pull-right" > 
-                        <a href = "#tag"> <span class="label label-default" href> {{tag.name}} </span> </a>
+                        <a href = "#tag"> <span class="label post-tag" href> {{tag.name}} </span> </a>
                     </p>
                     <ul class="list-inline">
                         <li><a href="#"><i class="glyphicon glyphicon-time"></i> {{post.dateTime}} </a></li>
