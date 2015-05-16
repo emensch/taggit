@@ -24,7 +24,7 @@
 }
 
 body {
-    padding-top: 70px;
+    padding-top: 50px;
 }
 
 #primary-content{
@@ -53,11 +53,13 @@ a:hover{
 #submit-button{
     background-color:#888;
     border:none;
-    color:white
+    color:white;
+    border-radius:0px;
+    
 }
 
 #submit-button:hover, #submit-button.active{
-    background-color:#f79148;   
+    background-color:#bc83a4;   
 }
 
 #posts-button{

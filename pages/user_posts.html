@@ -1,18 +1,16 @@
-<div class="col-md-8" style="float:none; margin: 0 auto">
+<!--begin subnav   -->
+<div class="row ">
+    <div class = "btn-group btn-block btn-group-md">
+        <a id = "posts-button" class="btn btn-primary active" style="width:33%" href = "#user_posts">Posts by {{user[0].username}}</a>
 
-    <div class="row ">
-        <div class="col-xs-12 ">
-            <div class = "btn-group btn-block btn-group-lg">
-                <a id = "posts-button" class="btn btn-primary active" style="width:33%" href = "#user_posts">Posts by {{user[0].username}}</a>
+        <a id = "comments-button" class="btn btn-primary " style="width:34%" href = "#user_comments">Comments by {{user[0].username}}</a>
 
-                <a id = "comments-button" class="btn btn-primary" style="width:34%" href = "#user_comments">Comments by {{user[0].username}}</a>
-
-                <a id = "tags-button" class="btn btn-primary " style="width:33%" href = "#user_tags">Manage tags</a>
-            </div>
-        </div>
-
-
+        <a id = "tags-button" class="btn btn-primary " style="width:33%" href = "#user_tags">Manage tags</a>
     </div>
+</div>
+<!--End subnav-->
+
+<div class="col-md-8" style="float:none; margin: 0 auto">
 
 
     <ul class = "post-list" ng-repeat="post in posts">
@@ -51,6 +49,7 @@
                     </ul>
                 </div>
             </div>
+            <hr>
         </li>
 
         <!--        End Post        -->
