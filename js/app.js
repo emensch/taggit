@@ -46,5 +46,4 @@ taggit.controller('taggitController', function($scope, $http) {
             item.votes += 1;
         }
     }
-
 })
