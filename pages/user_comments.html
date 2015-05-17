@@ -1,0 +1,44 @@
+<!--begin subnav   -->
+<div class="row ">
+    <div class = "btn-group btn-block btn-group-md">
+        <a id = "posts-button" class="btn btn-primaryrect" style="width:33%" href = "#user_posts">Posts by {{user[0].username}}</a>
+
+        <a id = "comments-button" class="btn btn-primary active rect" style="width:34%" href = "#user_comments">Comments by {{user[0].username}}</a>
+
+        <a id = "tags-button" class="btn btn-primary rect " style="width:33%" href = "#user_tags">Manage tags</a>
+    </div>
+</div>
+<!--End subnav-->
+
+<!--Begin body-->
+<div class="col-md-8" style="float:none; margin: 0 auto">
+
+
+
+
+    <ul class = "post-list" ng-repeat="post in posts">
+        <!--        Start Post      -->
+        <li>
+
+            <div class="row">   
+
+                <div class="col-xs-11">
+                    <h4><a href = #>{{post.title}}</a> by <a href = "#user_posts"></a></h4>
+                    <blockquote><h5>{{post.title}}</h5></blockquote>
+                    <ul class="list-inline">
+                        <li><a href="#"><i class="glyphicon glyphicon-time"></i> {{post.dateTime}} </a></li>
+                        <li><a href="#user_posts"><i class="glyphicon glyphicon-user"></i> by {{post.authorName}} </a></li>
+                        <li><a href="#comments"><i class="glyphicon glyphicon-comment"></i> full comments ({{post.numComments}}) </a></li>
+                    </ul>
+                </div>
+
+            </div>
+            <hr>
+        </li>
+
+        <!--        End Post        -->
+    </ul>
+
+
+</div>
+<!--End body-->

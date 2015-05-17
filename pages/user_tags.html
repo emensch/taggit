@@ -1,0 +1,44 @@
+
+<!--begin subnav   -->
+<div class="row ">
+    <div class = "btn-group btn-block btn-group-md">
+        <a id = "posts-button" class="btn btn-primary rect" style="width:33%" href = "#user_posts">Posts by {{user[0].username}}</a>
+
+        <a id = "comments-button" class="btn btn-primary rect" style="width:34%" href = "#user_comments">Comments by {{user[0].username}}</a>
+
+        <a id = "tags-button" class="btn btn-primary rect active " style="width:33%" href = "#user_tags">Manage tags</a>
+    </div>
+</div>
+<!--End subnav-->
+
+<div class="col-md-8" style="float:none; margin: 0 auto">
+
+
+
+    <ul class = "post-list" ng-repeat="post in posts">
+        <!--        Start Post      -->
+        <li>
+
+            <div class="row">   
+
+                <div class="col-xs-11">
+                    <h2><a href = #>donkus</a></h2>
+
+                    <ul class="list-inline">
+
+                        <li><a href="#"><i class="glyphicon glyphicon-user"></i> 900 subscribers </a></li>
+                        <li>
+                            <a href = "#"> <span id= "comments-button" class="label"> unsubscribe </span> </a>
+                        </li>
+
+
+                    </ul>
+                </div>
+            </div>
+        </li>
+
+        <!--        End Post        -->
+    </ul>
+
+
+</div>
