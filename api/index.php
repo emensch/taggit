@@ -7,8 +7,8 @@ require 'password.php';
 
 $app = new \Slim\Slim();
 
-$app->get('/', function() {
-    echo "lol neat";
+$app->get('/', function() use ($app) {
+    //var_dump($app->$router->getNamedRoutes());
 });
 
 // v1 group 
@@ -57,17 +57,17 @@ $app->group('/v1', function() use ($app) {
             echo $e;
         }
 
-    });
+    })->name('Add post');
 
     $app->post('/logout', 'authenticateKey', function() use ($app) {
-        $json = $app->request->getBody();
-        $data = json_decode($json, true);
+        $userID = $app->request->headers->get("Php-Auth-User"); 
+
         $sql = "DELETE FROM APIKeys WHERE userID = :ID";
 
         try {
             $db = getConnection();
             $stmt = $db->prepare($sql);
-            $stmt->bindParam(":ID", $data['userID']);
+            $stmt->bindParam(":ID", $userID);
             $stmt->execute();
         } catch(Exception $e) {
             $app->response->setStatus(500);
@@ -110,7 +110,7 @@ $app->group('/v1', function() use ($app) {
         });
         
         // Get user with ID
-        $app->get('/:id', function ($id) {
+        $app->get('/:id', 'authenticateKey', function ($id) {
             $result = array();
             $sql = "SELECT ID, name, score FROM Users WHERE ID = :ID";
             $sql2 = "SELECT Tags.name, Tags.id, Subscriptions.onTop FROM Subscriptions, Tags 
@@ -143,9 +143,16 @@ $app->group('/v1', function() use ($app) {
         });
 
         // Get user with ID's posts
-        $app->get('/:id/posts', function ($id) {
+        $app->get('/:id/posts', 'authenticateKey', function ($id) use ($app) {
             $result = array();
-            $sql = "SELECT Posts.*, Users.name FROM Posts, Users WHERE Posts.authorID = :ID AND Users.ID = Posts.authorID";
+            $userID = $app->request->headers->get("Php-Auth-User"); 
+
+            $sql = "SELECT Posts.*, COALESCE(pv.value, 0) as voteValue, Users.name FROM Posts
+            JOIN Users ON Posts.authorID = Users.ID
+            LEFT JOIN (SELECT * FROM PostVotes WHERE PostVotes.userID = :userID) as pv 
+            ON Posts.id = pv.postID
+            WHERE Posts.authorID = :ID";
+
             $sql2 = "SELECT Tags.ID, Tags.name FROM Tags, PostTags
                     WHERE Tags.ID = PostTags.tagID
                     AND PostTags.postID = :postID";
@@ -153,6 +160,7 @@ $app->group('/v1', function() use ($app) {
             try {
                 $db = getConnection();
                 $stmt = $db->prepare($sql);
+                $stmt->bindParam(":userID", $userID, PDO::PARAM_INT);
                 $stmt->bindParam(":ID", $id, PDO::PARAM_INT);
                 $stmt->execute();
 
@@ -170,6 +178,7 @@ $app->group('/v1', function() use ($app) {
                         "authorName" => $row['name'],
                         "authorID" => $row['authorID'],
                         "votes" => $row['votes'],
+                        "voteValue" => $row['voteValue'],
                         "title" => $row['title'],
                         "link" => $row['link'],
                         "body" => $row['body'],
@@ -187,15 +196,17 @@ $app->group('/v1', function() use ($app) {
         });
 
         // Get user with ID's frontpage posts
-        $app->get('/:id/frontpage', function ($id) {
+        $app->get('/:id/frontpage', 'authenticateKey', function ($id) use ($app) {
             $result = array();
-            $sql = "SELECT DISTINCT Posts.*, Users.name
-                    FROM Posts, Subscriptions, Tags, PostTags, Users
-                    WHERE Posts.ID = PostTags.postID
-                    AND PostTags.tagID = Tags.ID
-                    AND Tags.ID = Subscriptions.tagID
-                    AND Subscriptions.userID = :ID
-                    AND Users.ID = Posts.authorID
+            $userID = $app->request->headers->get("Php-Auth-User"); 
+
+            $sql = "SELECT DISTINCT Posts.*, COALESCE(pv.value, 0) as voteValue, Users.name FROM Posts
+                    JOIN PostTags ON Posts.id = PostTags.postID
+                    JOIN Subscriptions ON PostTags.tagID = Subscriptions.tagID
+                    JOIN Users ON Posts.authorID = Users.ID
+                    LEFT JOIN (SELECT * FROM PostVotes WHERE PostVotes.userID = :userID) as pv 
+                    ON Posts.id = pv.postID 
+                    WHERE Subscriptions.userID = :ID
                     ORDER BY Posts.Votes DESC, DateTime DESC";
             $sql2 = "SELECT Tags.ID, Tags.name FROM Tags, PostTags
                     WHERE Tags.ID = PostTags.tagID
@@ -204,6 +215,7 @@ $app->group('/v1', function() use ($app) {
             try {
                 $db = getConnection();
                 $stmt = $db->prepare($sql);
+                $stmt->bindParam(":userID", $userID, PDO::PARAM_INT);
                 $stmt->bindParam(":ID", $id, PDO::PARAM_INT);
                 $stmt->execute();
 
@@ -221,6 +233,7 @@ $app->group('/v1', function() use ($app) {
                         "authorName" => $row['name'],
                         "authorID" => $row['authorID'],
                         "votes" => $row['votes'],
+                        "voteValue" => $row['voteValue'],
                         "title" => $row['title'],
                         "link" => $row['link'],
                         "body" => $row['body'],
@@ -239,7 +252,7 @@ $app->group('/v1', function() use ($app) {
         });
 
         // Get user with ID's comments
-        $app->get('/:id/comments', function ($id) {
+        $app->get('/:id/comments', 'authenticateKey', function ($id) {
             $result = array();
             $sql = "SELECT Comments.*, Users.name FROM Comments, Users 
                     WHERE Comments.authorID = :ID AND Users.ID = Comments.authorID";
@@ -334,7 +347,7 @@ $app->group('/v1', function() use ($app) {
         });
         
         // Update a user
-        $app->put('/:id', function($id) use ($app) {
+        $app->put('/:id', 'authenticateKey', function($id) use ($app) {
 
         });
     });
@@ -342,9 +355,14 @@ $app->group('/v1', function() use ($app) {
     // Posts group
     $app->group('/posts', function() use ($app) {
         // Get all posts
-        $app->get('/', function() {
+        $app->get('/', 'authenticateKey', function() use ($app) {
             $result = array();
-            $sql = "SELECT Posts.*, Users.name FROM Posts, Users WHERE Users.ID = Posts.authorID";
+            $userID = $app->request->headers->get("Php-Auth-User");  
+
+            $sql = "SELECT Posts.*, COALESCE(pv.value, 0) as voteValue, Users.name FROM Posts
+                    JOIN Users ON Users.ID = Posts.authorID
+                    LEFT JOIN (SELECT * FROM PostVotes WHERE PostVotes.userID = :userID) as pv
+                    ON Posts.ID = pv.postID";
             $sql2 = "SELECT Tags.ID, Tags.name FROM Tags, PostTags
                     WHERE Tags.ID = PostTags.tagID
                     AND PostTags.postID = :postID";
@@ -352,6 +370,7 @@ $app->group('/v1', function() use ($app) {
             try { 
                 $db = getConnection();
                 $stmt = $db->prepare($sql);
+                $stmt->bindParam(":userID", $userID, PDO::PARAM_INT);
                 $stmt->execute();
 
                 foreach($stmt as $row) {
@@ -368,6 +387,7 @@ $app->group('/v1', function() use ($app) {
                         "authorName" => $row['name'],
                         "authorID" => $row['authorID'],
                         "votes" => $row['votes'],
+                        "voteValue" => $row['voteValue'],
                         "title" => $row['title'],
                         "link" => $row['link'],
                         "body" => $row['body'],
@@ -385,9 +405,14 @@ $app->group('/v1', function() use ($app) {
         });
 
         // Get post with ID
-        $app->get('/:id', function ($id) {
+        $app->get('/:id', 'authenticateKey', function ($id) use ($app) {
             $result = array();
-            $sql = "SELECT Posts.*, Users.name FROM Posts, Users WHERE Posts.ID = :ID AND Users.ID = Posts.authorID";
+            $userID = $app->request->headers->get("Php-Auth-User");  
+
+            $sql = "SELECT Posts.*, COALESCE(pv.value, 0) as voteValue, Users.name FROM Posts
+                    JOIN Users ON Users.ID = Posts.authorID
+                    LEFT JOIN (SELECT * FROM PostVotes WHERE PostVotes.userID = :userID) as pv
+                    ON Posts.ID = pv.postID WHERE Posts.ID = :ID";
             $sql2 = "SELECT Tags.ID, Tags.name FROM Tags, PostTags
                     WHERE Tags.ID = PostTags.tagID
                     AND PostTags.postID = :postID";
@@ -396,6 +421,7 @@ $app->group('/v1', function() use ($app) {
                 $db = getConnection();
                 $stmt = $db->prepare($sql);
                 $stmt->bindParam(":ID", $id, PDO::PARAM_INT);
+                $stmt->bindParam(":userID", $userID, PDO::PARAM_INT);
                 $stmt->execute();
                 $row = $stmt->fetch();
 
@@ -412,6 +438,7 @@ $app->group('/v1', function() use ($app) {
                     "authorName" => $row['name'],
                     "authorID" => $row['authorID'],
                     "votes" => $row['votes'],
+                    "voteValue" => $row['voteValue'],
                     "title" => $row['title'],
                     "link" => $row['link'],
                     "body" => $row['body'],
@@ -428,7 +455,7 @@ $app->group('/v1', function() use ($app) {
         });
 
         // Get post with ID's comments
-        $app->get('/:id/comments', function ($id) {
+        $app->get('/:id/comments', 'authenticateKey', function ($id) {
             $result = array();
             $sql = "SELECT Comments.*, Users.name FROM Comments, Users 
                     WHERE Comments.postID = :ID AND Users.ID = Comments.authorID";
@@ -438,9 +465,9 @@ $app->group('/v1', function() use ($app) {
                 $stmt = $db->prepare($sql);
                 $stmt->bindParam(":ID", $id, PDO::PARAM_INT);
                 $stmt->execute();
-                $timeInterval = getTimeInterval($row['dateTime']);
 
                 foreach($stmt as $row) {
+                    $timeInterval = getTimeInterval($row['dateTime']);
                     $result[] = array(
                         "ID" => $row['id'],
                         "parentID" => $row['postID'],
@@ -459,13 +486,49 @@ $app->group('/v1', function() use ($app) {
             echo json_encode($result);          
         });
 
-        // Add a post
-        $app->post('/', function() use ($app) {
+        // Add a comment to post with ID
+        $app->post('/:id/comments', 'authenticateKey', function($id) use ($app) {
             $json = $app->request->getBody();
-            $data = json_decode($json, true);    
+            $data = json_decode($json, true); 
+            $userID = $app->request->headers->get("Php-Auth-User");  
 
-            $sql = "INSERT INTO Posts (authorID, title, link, body, dateTime) 
-                    VALUES (:authorID, :title, :link, :body, :dateTime)";
+            $parentexists = "SELECT COUNT(*) AS postExists FROM Posts WHERE ID = :postID";
+            $sql = "INSERT INTO Comments (postID, authorID, body, dateTime)
+                    VALUES (:postID, :authorID, :body, :dateTime);
+                    UPDATE Posts SET numComments=numComments+1 WHERE ID = :postID";
+
+            try {
+                $db = getConnection();
+                $stmt = $db->prepare($parentexists);
+                $stmt->bindParam(":postID", $id);
+                $stmt->execute();
+                $row = $stmt->fetch();
+
+                if($row['postExists'] >= 1) {
+                    $stmt = $db->prepare($sql);
+                    $stmt->bindParam(":postID", $id, PDO::PARAM_INT);
+                    $stmt->bindParam(":authorID", $userID, PDO::PARAM_INT);
+                    $stmt->bindParam(":body", $data['body']);
+                    $stmt->bindParam(":dateTime", getTime());
+                    $stmt->execute();
+                    $app->response->setStatus(201);
+                } else {
+                    $app->response->setStatus(404);
+                }
+            } catch(Exception $e) {
+                $app->response->setStatus(500);
+                echo $e;
+            }
+        }); 
+
+        // Add a post
+        $app->post('/', 'authenticateKey', function() use ($app) {
+            $json = $app->request->getBody();
+            $data = json_decode($json, true);
+            $userID = $app->request->headers->get("Php-Auth-User");    
+
+            $sql = "INSERT INTO Posts (authorID, title, link, body, dateTime, votes, numComments) 
+                    VALUES (:authorID, :title, :link, :body, :dateTime, 0, 0)";
             $sql2 = "INSERT IGNORE INTO Tags (name, userCount)
                     VALUES (:tagName, 0);
                     INSERT INTO PostTags (tagID, postID)
@@ -474,7 +537,7 @@ $app->group('/v1', function() use ($app) {
             try {
                 $db = getConnection();
                 $stmt = $db->prepare($sql);
-                $stmt->bindParam(":authorID", $data['authorID'], PDO::PARAM_INT);
+                $stmt->bindParam(":authorID", $userID, PDO::PARAM_INT);
                 $stmt->bindParam(":title", $data['title']);
                 $stmt->bindParam(":link", $data['link']);
                 $stmt->bindParam(":body", $data['body']);
@@ -497,90 +560,199 @@ $app->group('/v1', function() use ($app) {
         });
 
         // Update post with ID
-        $app->put('/:id', function($id) use ($app) {
+        $app->put('/:id', 'authenticateKey', function($id) use ($app) {
             $json = $app->request->getBody();
             $data = json_decode($json, true);
+            $userID = $app->request->headers->get("Php-Auth-User");  
 
+            $owner = "SELECT authorID FROM Posts Where id = :id";
             $sql = "UPDATE Posts
                     SET title = :title, body = :body, editedOn = :editedOn
-                    WHERE Posts.id = :id";
+                    WHERE id = :id";
             try {
                 $db = getConnection();
-                $stmt = $db->prepare($sql);
-                $stmt->bindParam(":title", $data['title']);
-                $stmt->bindParam(":body", $data['body']);
-                $stmt->bindParam(":editedOn", getTime());
-                $stmt->bindParam("id", $id);
+                $stmt = $db->prepare($owner);
+                $stmt->bindParam(":id", $id);
                 $stmt->execute();
+                $row = $stmt->fetch();
+                if($row['authorID'] == $userID) {
+                    $stmt = $db->prepare($sql);
+                    $stmt->bindParam(":title", $data['title']);
+                    $stmt->bindParam(":body", $data['body']);
+                    $stmt->bindParam(":editedOn", getTime());
+                    $stmt->bindParam(":id", $id);
+                    $stmt->execute();
+                } else {
+                    $app->response->setStatus(401);
+                }
             } catch(Exception $e) {
                 $app->response->setStatus(500);
                 echo $e;
             }
         });
 
-        // Update/create vote
-        $app->put('/:id/votes', function($id) use ($app) {
-            /*
+        // Update/add vote
+        $app->put('/:id/vote', 'authenticateKey', function($id) use ($app) {
+            $userID = $app->request->headers->get("Php-Auth-User"); 
             $json = $app->request->getBody();
             $data = json_decode($json, true);
 
-            $voteQ = "SELECT COUNT(*), up FROM PostVotes WHERE userID = :userID AND postID = :postID";
+            $postexists = "SELECT COUNT(*) AS postExists FROM Posts WHERE ID = :postID";
+            $hasVotedQ = "SELECT COUNT(*) as voted, value FROM PostVotes WHERE userID = :userID AND postID = :postID";
+            $updateVoteQ = "UPDATE PostVotes SET value = :value WHERE userID = :userID AND postID = :postID;
+                            UPDATE Posts SET votes = votes + :diff WHERE ID = :postID";
+            $insertVoteQ = "INSERT INTO PostVotes (postID, userID, value)
+                            VALUES (:postID, :userID, :value);
+                            UPDATE Posts SET votes = votes + :diff WHERE ID = :postID";
 
             try {
                 // Check if user has already voted, store vote value (for correct incr/decr calc)
                 $db = getConnection();
-                $stmt = $db->prepare($voteQ);
-                $stmt = 
+                $stmt = $db->prepare($postexists);
+                $stmt->bindParam(":postID", $id, PDO::PARAM_INT);
+                $stmt->execute();
+                $row = $stmt->fetch();
+
+                // if post exists
+                if($row['postExists'] >= 1) {
+                    $stmt = $db->prepare($hasVotedQ);
+                    $stmt->bindParam(":userID", $userID, PDO::PARAM_INT);
+                    $stmt->bindParam(":postID", $id, PDO::PARAM_INT);
+                    $stmt->execute();
+                    $row = $stmt->fetch();
+
+                    // If vote exists
+                    if($row['voted'] >= 1) {
+                        if($data['value'] != 0) {
+                            $voteDiff = $data['value'] - $row['value'];
+                        } else {
+                            $voteDiff = -$row['value'];
+                        }
+
+                        // Run commit only if vote needs to be modified 
+                        if($voteDiff) {
+                            $stmt = $db->prepare($updateVoteQ);
+                            $stmt->bindParam(":value", $data['value'], PDO::PARAM_INT);
+                            $stmt->bindParam(":userID", $userID, PDO::PARAM_INT);
+                            $stmt->bindParam(":postID", $id, PDO::PARAM_INT);
+                            $stmt->bindParam(":diff", $voteDiff, PDO::PARAM_INT);
+                            $stmt->execute();
+                        }
+                    } else {
+                        $stmt = $db->prepare($insertVoteQ);
+                        $stmt->bindParam(":userID", $userID, PDO::PARAM_INT);
+                        $stmt->bindParam(":postID", $id, PDO::PARAM_INT);
+                        $stmt->bindParam(":value", $data['value'], PDO::PARAM_INT);
+                        $stmt->bindParam(":diff", $data['value']);
+                        $stmt->execute();
+                    }  
+                } else {
+                    $app->response->setStatus(404);
+                }
+            } catch(Exception $e) {
+                $app->response->setStatus(500);
+                echo $e;
             }
-            */
+            
         });
 
         // Delete post with ID
-        $app->delete('/:id', function($id) {
+        $app->delete('/:id', 'authenticateKey', function($id) use ($app) {
+            $userID = $app->request->headers->get("Php-Auth-User");  
 
+            $owner = "SELECT authorID FROM Posts Where id = :id";
+            $sql = "DELETE FROM Posts WHERE id = :id; 
+                    DELETE FROM Comments WHERE postID = :id;
+                    DELETE FROM PostTags WHERE postID = :id;
+                    DELETE FROM PostVotes WHERE postID = :id";
+
+            try {
+                $db = getConnection();
+                $stmt = $db->prepare($owner);
+                $stmt->bindParam(":id", $id);
+                $stmt->execute();
+                $row = $stmt->fetch();
+                // Post owner verify
+                if($row['authorID'] == $userID) {
+                    $stmt = $db->prepare($sql);
+                    $stmt->bindParam(":id", $id);
+                    $stmt->execute();
+                } else {
+                    $app->response->setStatus(401);
+                }
+            } catch(Exception $e) {
+                $app->response->setStatus(500);
+                echo $e;
+            }
         });
     });
 
     // Comments group
     $app->group('/comments', function() use ($app) {
-        // Add a comment
-        $app->post('/', function() use ($app) {
+        // Update comment with ID
+        $app->put('/:id', 'authenticateKey', function($id) use ($app) {
             $json = $app->request->getBody();
-            $data = json_decode($json, true); 
+            $data = json_decode($json, true);
+            $userID = $app->request->headers->get("Php-Auth-User");  
 
-            $sql = "INSERT INTO Comments (postID, authorID, body, dateTime)
-                    VALUES (:postID, :authorID, :body, :dateTime);
-                    UPDATE Posts SET numComments=numComments+1 WHERE ID = :postID";
-
+            $owner = "SELECT authorID FROM Comments Where id = :id";
+            $sql = "UPDATE Comments
+                    SET body = :body, editedOn = :editedOn
+                    WHERE id = :id";
             try {
                 $db = getConnection();
-                $stmt = $db->prepare($sql);
-                $stmt->bindParam(":postID", $data['postID'], PDO::PARAM_INT);
-                $stmt->bindParam(":authorID", $data['authorID'], PDO::PARAM_INT);
-                $stmt->bindParam(":body", $data['body']);
-                $stmt->bindParam(":dateTime", getTime());
+                $stmt = $db->prepare($owner);
+                $stmt->bindParam(":id", $id);
                 $stmt->execute();
+                $row = $stmt->fetch();
+                if($row['authorID'] == $userID) {
+                    $stmt = $db->prepare($sql);
+                    $stmt->bindParam(":body", $data['body']);
+                    $stmt->bindParam(":editedOn", getTime());
+                    $stmt->bindParam(":id", $id);
+                    $stmt->execute();
+                } else {
+                    $app->response->setStatus(401);
+                }
             } catch(Exception $e) {
                 $app->response->setStatus(500);
                 echo $e;
             }
         }); 
 
-        // Update comment with ID
-        $app->put('/:id', function($id) use ($app) {
-
-        }); 
-
         // Delete comment with ID
-        $app->delete('/:id', function($id) {
+        $app->delete('/:id', 'authenticateKey', function($id) use ($app) {
+            $userID = $app->request->headers->get("Php-Auth-User");
 
+            $owner = "SELECT authorID, postID FROM Comments Where id = :id";
+            $sql = "DELETE FROM Comments WHERE id = :id;
+                    UPDATE Posts SET numComments=numComments-1 WHERE id = :parentID";
+
+            try {
+                $db = getConnection();
+                $stmt = $db->prepare($owner);
+                $stmt->bindParam(":id", $id);
+                $stmt->execute();
+                $row = $stmt->fetch();
+                if($row['authorID'] == $userID) {
+                    $stmt = $db->prepare($sql);
+                    $stmt->bindParam(":id", $id);
+                    $stmt->bindParam(":parentID", $row['postID']);
+                    $stmt->execute();
+                } else {
+                    $app->response->setStatus(401);
+                }
+            } catch(Exception $e) {
+                $app->response->setStatus(500);
+                echo $e;
+            }
         });
     });
 
     // Tags group
     $app->group('/tags', function() use ($app) {
         // Get all tags
-        $app->get('/', function() {
+        $app->get('/', 'authenticateKey', function() {
             $result = array();
             $sql = "SELECT Tags.* FROM Tags";
 
@@ -603,10 +775,16 @@ $app->group('/v1', function() use ($app) {
         });
 
         // Get tag with ID's posts
-        $app->get('/:id/posts', function($id) {
+        $app->get('/:id/posts', 'authenticateKey', function($id) use ($app) {
             $result = array();
-            $sql = "SELECT DISTINCT Posts.*, Users.name FROM Posts, Users, PostTags 
-            WHERE Users.ID = Posts.authorID AND Posts.ID = PostTags.postID AND PostTags.tagID = :ID";
+            $userID = $app->request->headers->get("Php-Auth-User");  
+
+            $sql = "SELECT DISTINCT Posts.*, COALESCE(pv.value, 0) as voteValue, Users.name FROM Posts
+                    JOIN Users ON Users.ID = Posts.authorID
+                    JOIN PostTags ON Posts.ID = PostTags.postID
+                    LEFT JOIN (SELECT * FROM PostVotes WHERE PostVotes.userID = :userID) as pv
+                    ON Posts.ID = pv.postID
+                    WHERE PostTags.tagID = :ID";
             $sql2 = "SELECT Tags.ID, Tags.name FROM Tags, PostTags
                     WHERE Tags.ID = PostTags.tagID
                     AND PostTags.postID = :postID";
@@ -614,6 +792,7 @@ $app->group('/v1', function() use ($app) {
             try {
                 $db = getConnection();
                 $stmt = $db->prepare($sql);
+                $stmt->bindParam(":userID", $userID);
                 $stmt->bindParam("ID", $id);
                 $stmt->execute();
 
@@ -631,6 +810,7 @@ $app->group('/v1', function() use ($app) {
                         "authorName" => $row['name'],
                         "authorID" => $row['authorID'],
                         "votes" => $row['votes'],
+                        "voteValue" => $row['voteValue'],
                         "title" => $row['title'],
                         "link" => $row['link'],
                         "body" => $row['body'],
@@ -652,31 +832,122 @@ $app->group('/v1', function() use ($app) {
 
         });
     });
+
+    // Subscription group
+    $app->group('/subscriptions', function() use ($app) {
+        // Add a subscription
+        $app->post('/', 'authenticateKey', function() use ($app) {
+            $json = $app->request->getBody();
+            $data = json_decode($json, true); 
+            $userID = $app->request->headers->get("Php-Auth-User"); 
+
+            $exists = "SELECT COUNT(*) as subExists FROM Subscriptions 
+                    WHERE userID = :userID AND tagID = (
+                    SELECT id FROM Tags WHERE Tags.name = :tagName)";
+            $sql = "INSERT INTO Subscriptions (tagID, userID, onTop)
+                    SELECT Tags.id, :userID, 0 FROM Tags
+                    WHERE Tags.id = (
+                    SELECT id FROM Tags WHERE Tags.name = :tagName);
+                    UPDATE Tags SET usercount=usercount+1 WHERE Tags.name = :tagName";
+
+            try {  
+                $db = getConnection();
+                $stmt = $db->prepare($exists);
+                $stmt->bindParam(":userID", $userID, PDO::PARAM_INT);
+                $stmt->bindParam(":tagName", $data['tagName']);
+                $stmt->execute();
+                $row = $stmt->fetch();
+
+                if($row['subExists'] == 0) {
+                    $stmt = $db->prepare($sql);
+                    $stmt->bindParam(":userID", $userID, PDO::PARAM_INT);
+                    $stmt->bindParam(":tagName", $data['tagName']);
+                    $stmt->execute();
+                    $app->response->setStatus(201);
+                }
+            } catch(Exception $e) {
+                $app->response->setStatus(500);
+                echo $e;
+            }   
+        });
+
+        // Update subscription with tagID
+        $app->put('/:id', 'authenticateKey', function($id) use ($app) {
+            $json = $app->request->getBody();
+            $data = json_decode($json, true); 
+            $userID = $app->request->headers->get("Php-Auth-User"); 
+
+            $sql = "UPDATE Subscriptions SET onTop = :onTop WHERE tagID = :tagID AND userID = :userID";
+
+            try {
+                $db = getConnection();
+                $stmt = $db->prepare($sql);
+                $stmt->bindParam(":onTop", $data['onTop'], PDO::PARAM_INT);
+                $stmt->bindParam(":tagID", $id, PDO::PARAM_INT);
+                $stmt->bindParam(":userID", $userID, PDO::PARAM_INT);
+                $stmt->execute();
+            } catch(Exception $e) {
+                $app->response->setStatus(500);
+                echo $e;
+            }
+        });
+
+        // Delete subscription with tagID
+        $app->delete('/:id', 'authenticateKey', function($id) use ($app) {
+            $userID = $app->request->headers->get("Php-Auth-User"); 
+
+            $exists = "SELECT COUNT(*) as subExists FROM Subscriptions 
+                    WHERE userID = :userID AND tagID = :tagID";
+            $sql = "DELETE FROM Subscriptions WHERE tagID = :tagID AND userID = :userID;
+                    UPDATE Tags SET usercount=usercount-1 WHERE ID = :tagID";
+
+            try {
+                $db = getConnection();
+                $stmt = $db->prepare($exists);
+                $stmt->bindParam(":tagID", $id, PDO::PARAM_INT);
+                $stmt->bindParam(":userID", $userID, PDO::PARAM_INT);
+                $stmt->execute();
+                $row = $stmt->fetch();
+
+                if($row['subExists'] >= 1) {
+                    $stmt = $db->prepare($sql);
+                    $stmt->bindParam(":tagID", $id, PDO::PARAM_INT);
+                    $stmt->bindParam(":userID", $userID, PDO::PARAM_INT);
+                    $stmt->execute();
+                }
+            } catch(Exception $e) {
+                $app->response->setStatus(500);
+                echo $e;
+            }
+        });
+    });
+
 });
 
-// Authentication middleware function
+
+// Authenticate user based on ID and apiKey, update time
 function authenticateKey() {
     $app = \Slim\Slim::getInstance();
 
-    $json = $app->request->getBody();
-    $data = json_decode($json, true);
-    $userID = $data['userID'];
-    $apiKey = $data['apiKey'];
+    $userID = $app->request->headers->get("Php-Auth-User");
+    $apiKey = $app->request->headers->get("Php-Auth-Pw");
 
-    $sql = "SELECT COUNT(*) as keyExists, apiKey FROM APIKeys WHERE userID = :ID";
+    $sql = "SELECT COUNT(*) as keyExists, apiKey, dateTime FROM APIKeys WHERE userID = :ID";
     try {
         $db = getConnection();
         $stmt = $db->prepare($sql); 
         $stmt->bindParam(":ID", $userID);
         $stmt->execute();
-        $row = $stmt->fetch();  
+        $row = $stmt->fetch();
     } catch(Exception $e) {
         $app->response->setStatus(500);
         echo $e;
     }
+    $timediff = strtotime(getTime()) - strtotime($row['dateTime']);
 
-    if($apiKey !== $row['apiKey']) {
-        $app->redirect('/');
+    // If not logged in or key out of date
+    if($apiKey !== $row['apiKey'] || $timediff > 3600) {
+        $app->redirect('/login');
     }  
 };
 
