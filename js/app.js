@@ -1,8 +1,10 @@
-var taggit = angular.module('taggit',
-                            ['ngRoute',
-                             'ngAnimate']);
-
-taggit.config(function($routeProvider) {
+angular.module('taggit', [
+    'ngRoute'
+])
+.config(function($httpProvider){
+	$httpProvider.interceptors.push('authInterceptor')
+})
+.config(function($routeProvider, $locationProvider) {
     $routeProvider
 
     // route for the frontpage
@@ -34,77 +36,27 @@ taggit.config(function($routeProvider) {
         templateUrl : 'pages/user_comments.html',
         controller  : 'user_commentsController'
     })
+    // Route for login page
+        .when('/login', {
+        	templateUrl : 'pages/login.html',
+        	controller : 'loginController'
+    })
+    // Route for registration page
+        .when('/register', {
+        	templateUrl : 'pages/register.html',
+        	controller : 'registerController'
+    })
 
-});
+    //$locationProvider.html5Mode(true);
 
-taggit.controller('frontController', function($scope){
-    $scope.pageClass = 'page-front';   
-});
-
-taggit.controller('new_postController', function($scope){
-    $scope.pageClass = 'page-new_post';   
-});
-
-taggit.controller('user_postsController', function($scope){
-    $scope.pageClass = 'page-user_posts';   
-});
-
-taggit.controller('user_tagController', function($scope){
-    $scope.pageClass = 'page-user_tags';   
-});
-
-taggit.controller('user_commentsController', function($scope){
-    $scope.pageClass = 'page-user_comments';   
-});
-
-
-
-taggit.controller('taggitController', function($scope, $http) {
-    rootUrl = '/api/v1';
-    userID = 1;
-
-    $scope.pageClass = 'page-front';   
-
-    $http.get('/api/v1/users/'+userID).
-    success(function(data) {
-        $scope.user = data;
-    });
-
-    $http.get(rootUrl + '/users/'+userID+'/frontpage').
-    success(function(data) {
-        $scope.posts = data;
-        console.log($scope.posts);
-    });
-
-    $scope.selectedIndex = 0; // Whatever the default selected index is, use -1 for no selection
-
-    //    $scope.itemClicked = function ($index) {
-    //        $scope.selectedIndex = $index;
-    //    };
-
-    $scope.upvote = function(item) {
-        if(item.voted == 0) {
-            item.voted = 1;
-            item.votes += 1;
-        } else if (item.voted == -1){
-            item.voted = 1 
-            item.votes += 2;
-        } else {
-            item.voted = 0;
-            item.votes -= 1;
-        }
-    }
-
-    $scope.downvote = function(item) {
-        if(item.voted == 0) {
-            item.voted = -1 
-            item.votes -= 1;
-        } else if (item.voted == 1){
-            item.voted = -1 
-            item.votes -= 2;
-        } else {
-            item.voted = 0;
-            item.votes += 1;
-        }
-    }
+}).run(function($rootScope, $location, UserService) {
+	$rootScope.$on("$routeChangeStart", function(event, next, current) {
+		if(UserService.loggedIn == false) {
+			console.log("NOT LOGGED IN");
+		// no logged user, redirect to login
+			if(next.templateUrl !== "pages/login.html" && next.templateUrl !== "pages/register.html") {
+				$location.path('/login');
+			}
+		}	
+	});
 });

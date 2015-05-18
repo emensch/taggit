@@ -8,7 +8,35 @@ require 'password.php';
 $app = new \Slim\Slim();
 
 $app->get('/', function() use ($app) {
-    //var_dump($app->$router->getNamedRoutes());
+            $result = array();
+            $sql = "SELECT * FROM Users ORDER BY name";
+            $sql2 = "SELECT Tags.name, Tags.id, Subscriptions.onTop FROM Subscriptions, Tags 
+                    WHERE Tags.ID = Subscriptions.tagID 
+                    AND Subscriptions.userID = :userID";
+            try { 
+                $db = getConnection();
+                $stmt = $db->prepare($sql);
+                $query = $db->query($sql);
+                foreach($query as $row) {
+                    $stmt2 = $db->prepare($sql2);
+                    $stmt2->bindParam(":userID", $row['ID'], PDO::PARAM_INT);
+                    $stmt2->execute();
+                    $tags = array();
+                    foreach($stmt2 as $row2) {
+                        $tags[] = array("name" => $row2['name'], "id" => $row2['id'], "top" => $row2['onTop']);
+                    }
+                    $result[] = array(
+                        "username" => $row['name'],
+                        "email" => $row['email'],
+                        "score" => $row['score'],
+                        "tags" => $tags
+                    );    
+                }
+            } catch(Exception $e) {
+                $app->response->setStatus(500);
+                echo $e;
+            }
+            echo json_encode($result);    
 });
 
 // v1 group 
@@ -21,7 +49,7 @@ $app->group('/v1', function() use ($app) {
 
         $validate = "SELECT COUNT(*) as valid, id, passwordHash
                 FROM Users
-                WHERE name = :name";
+                WHERE email = :email";
         $apikey = "INSERT APIKeys (userID, apiKey, dateTime)  
                 VALUES (:userID, :key, :dateTime) 
                 ON DUPLICATE KEY UPDATE apiKey = :key, dateTime = :dateTime";
@@ -30,7 +58,7 @@ $app->group('/v1', function() use ($app) {
             // Check credentials
             $db = getConnection();
             $stmt = $db->prepare($validate);
-            $stmt->bindParam(":name", $data['name']);
+            $stmt->bindParam(":email", $data['email']);
             $stmt->execute();
             $row = $stmt->fetch();
 
@@ -947,7 +975,7 @@ function authenticateKey() {
 
     // If not logged in or key out of date
     if($apiKey !== $row['apiKey'] || $timediff > 3600) {
-        $app->redirect('/login');
+        $app->halt(401);
     }  
 };
 

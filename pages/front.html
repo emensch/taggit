@@ -7,15 +7,16 @@
 <div class="col-md-8" style="float:none; margin: 0 auto">
 
 
-    <ul class = "post-list" ng-repeat="post in posts">
+    <ul class = "post-list" ng-repeat="post in posts" ng-controller="postController">
         <!--        Start Post      -->
+        {{ post.ID }}
         <li>
 
             <div class="row">   
                 <div class = "col-xs-1 vcenter">
                     <div class="voter" 
-                         ng-class="{true:'up-voted', false:'up'}[post.voted > 0]"
-                         ng-click="upvote(post)">
+                         ng-class="{true:'up-voted', false:'up'}[post.voteValue > 0]"
+                         ng-click="upvote()">
                         <span class="glyphicon glyphicon-chevron-up"></span>
                     </div>
 
@@ -23,8 +24,8 @@
                         <span>{{post.votes}}</span>
                     </div>
 
-                    <div class="voter" ng-class="{true:'down-voted', false:'down'}[post.voted < 0]"
-                         ng-click="downvote(post)">
+                    <div class="voter" ng-class="{true:'down-voted', false:'down'}[post.voteValue < 0]"
+                         ng-click="downvote()">
 
                         <span class="glyphicon glyphicon-chevron-down"></span>
                     </div>
