@@ -14,29 +14,39 @@ angular.module('taggit', [
         controller  : 'frontController'
     })
 
-    // route for the about page
         .when('/new_post', {
         templateUrl : 'pages/new_post.html',
         controller  : 'new_postController'
     })
 
-    // route for the about page
+        .when('/my_posts', {
+        templateUrl : 'pages/my_posts.html',
+        controller  : 'my_postsController'
+    })
+
+        
+        .when('/my_comments', {
+        templateUrl : 'pages/my_comments.html',
+        controller  : 'my_commentsController'
+    })
+    
+    
+        .when('/my_tags', {
+        templateUrl : 'pages/my_tags.html',
+        controller  : 'my_tagsController'
+    })
+
+        
         .when('/user_posts', {
         templateUrl : 'pages/user_posts.html',
         controller  : 'user_postsController'
     })
 
-    // route for the about page
-        .when('/user_tags', {
-        templateUrl : 'pages/user_tags.html',
-        controller  : 'user_tagController'
-    })
-
-    // route for the about page
         .when('/user_comments', {
         templateUrl : 'pages/user_comments.html',
         controller  : 'user_commentsController'
     })
+    
     // Route for login page
         .when('/login', {
         templateUrl : 'pages/login.html',
