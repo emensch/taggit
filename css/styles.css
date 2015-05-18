@@ -1,15 +1,17 @@
 #main-nav{
-    background-color:#669579;
+    /*
+    background-color:#53a875;
     border: none;
     color:000;
+    */
 }
 /*276fa2*/
 #nav-item{
-    color:white;   
+    /*    color:white;   */
 }
 
 #nav-item:hover{
- background-color:#46835f;   
+    /* background-color:#46835f;   */
 }
 
 .rect {
@@ -76,46 +78,75 @@ a:hover{
     border:none;
     color:white;
     border-radius:0px;
-    
+    background-color:#888;
+    /*    border:none;*/
+    color:white;
+    border-style: none none solid none;
+    border-width:5px;
+    border-color:#888;
+    -webkit-box-shadow: none;
+
 }
 
 #submit-button:hover, #submit-button.active{
-    background-color:#bc83a4;   
+    /*    background-color:#bc83a4;   */
+    border-bottom-color:#f74856;
+
 }
 
 #posts-button{
     background-color:#888;
-    border:none;
-    color:white
+    /*    border:none;*/
+    color:white;
+    border-style: none none solid none;
+    border-width:5px;
+    border-color:#888;
+    -webkit-box-shadow: none;
 
 }
 
 #posts-button:hover, #posts-button.active{
-    background-color:#bc83a4;   
+    /*    background-color:#bc83a4;   */
+    border-bottom-color:#f74856;
 }
 
 
 #comments-button{
     background-color:#888;
-    border:none;
-    color:white
+    /*    border:none;*/
+    color:white;
+    border-style: none none solid none;
+    border-width:5px;
+    border-color:#888;
+    -webkit-box-shadow: none;
+
 }
 
 #comments-button:hover,  #comments-button.active{
-    background-color:#65a9da;   
+    /*    background-color:#65a9da;   */
+    border-bottom-color:#f7ea48;
+
 }
 
 
 
 #tags-button{
     background-color:#888;
-    border:none;
-    color:white
+    /*    border:none;*/
+    color:white;
+    border-style: none none solid none;
+    border-width:5px;
+    border-color:#888;
+
+    -webkit-box-shadow: none;
+
 
 }
 
 #tags-button:hover,  #tags-button.active{
-    background-color:#d2976d;   
+    /*    background-color:#d2976d;   */
+    border-bottom-color:#48AEF7;
+
 }
 
 
