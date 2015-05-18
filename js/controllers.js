@@ -68,6 +68,10 @@ angular.module('taggit')
     $scope.pageClass = 'page-user_comments';   
 })
 
+.controller('tagController', function($scope, $http, rootUrl, UserService){
+    $scope.pageClass = 'page-tag';   
+})
+
 .controller('taggitController', function($scope, $http, $location, rootUrl, UserService) {
     $scope.$on("loginStatusChanged", function() {
         $scope.showNav = UserService.loggedIn;
