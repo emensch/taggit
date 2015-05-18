@@ -101,6 +101,8 @@ a:hover{
     border-style: none none solid none;
     border-width:5px;
     border-color:#888;
+    border-radius:0px;
+    width:33%;
     -webkit-box-shadow: none;
 
 }
@@ -117,6 +119,8 @@ a:hover{
     color:white;
     border-style: none none solid none;
     border-width:5px;
+    border-radius:0px;
+    width:34%;
     border-color:#888;
     -webkit-box-shadow: none;
 
@@ -136,6 +140,8 @@ a:hover{
     color:white;
     border-style: none none solid none;
     border-width:5px;
+    border-radius:0px;
+    width:33%;
     border-color:#888;
 
     -webkit-box-shadow: none;
