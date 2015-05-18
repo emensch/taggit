@@ -1,0 +1,63 @@
+<!--begin subnav   -->
+<div class="row ">
+    <div class = "btn-group btn-block btn-group-md">
+        <a id = "posts-button" class="btn btn-primaryrect" style="width:50%" href = "#new_post">Submit a new post in {{tag.name}}</a>
+
+        <a id = "comments-button" class="btn btn-primary active rect" style="width:50%" href = "">Subscribe</a>
+
+    </div>
+</div>
+<!--End subnav-->
+
+<!--        Start Body      -->
+        
+<div class="col-md-8" style="float:none; margin: 0 auto">
+
+
+    <ul class = "post-list" ng-repeat="post in posts" ng-controller="postController">
+        <!--        Start Post      -->
+        {{ post.ID }}
+        <li>
+
+            <div class="row">   
+                <div class = "col-xs-1 vcenter">
+                    <div class="voter" 
+                         ng-class="{true:'up-voted', false:'up'}[post.voteValue > 0]"
+                         ng-click="upvote()">
+                        <span class="glyphicon glyphicon-chevron-up"></span>
+                    </div>
+
+                    <div class="voter">
+                        <span>{{post.votes}}</span>
+                    </div>
+
+                    <div class="voter" ng-class="{true:'down-voted', false:'down'}[post.voteValue < 0]"
+                         ng-click="downvote()">
+
+                        <span class="glyphicon glyphicon-chevron-down"></span>
+                    </div>
+
+                </div>
+                <div class="col-xs-11">
+                    <h2><a href = #>{{post.title}}</a></h2>
+
+                    <p ng-repeat="tag in post.tags" class="pull-right" > 
+                        <a href = "#tag"> <span class="label post-tag" href> {{tag.name}} </span> </a>
+                    </p>
+                    <ul class="list-inline">
+                        <li><p><i class="glyphicon glyphicon-time"></i> {{post.dateTime}} </p></li>
+                        <li><a href="#"><i class="glyphicon glyphicon-user"></i> by {{post.authorName}} </a></li>
+                        <li><a href="#"><i class="glyphicon glyphicon-comment"></i> view comments ({{post.numComments}}) </a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+        </li>
+
+        <!--        End Post        -->
+    </ul>
+
+
+</div>
+
+<!--        End Body        -->
