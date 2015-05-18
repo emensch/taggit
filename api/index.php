@@ -1025,6 +1025,7 @@ function getTimeInterval($dateTime) {
 
 function getConnection() {
     $dbhost = "127.0.0.1";
+//    $dbhost = "192.254.188.229";
     $dbuser = "mcgrail_group5";
     $dbpass = "f1v3@l1v3";
     $dbname = "mcgrail_group5";

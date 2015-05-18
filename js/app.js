@@ -1,6 +1,7 @@
 angular.module('taggit', [
     'ngRoute'
 ])
+
     .config(function($httpProvider){
     $httpProvider.interceptors.push('authInterceptor')
 })
@@ -48,8 +49,13 @@ angular.module('taggit', [
     })
 
         .when('/tag',{
-        templateUrl : 'page/tag.html',
+        templateUrl : 'pages/tag.html',
         controller : 'tagController'
+    })
+
+        .when('/comments',{
+        templateUrl : 'pages/comments.html',
+        controller : 'commentsController'
     })
 
     //$locationProvider.html5Mode(true);

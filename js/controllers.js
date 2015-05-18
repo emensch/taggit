@@ -44,7 +44,6 @@ angular.module('taggit')
     }
 })
 .controller('frontController', function($scope, $http, rootUrl, UserService){
-    $scope.pageClass = 'page-front';
     $http.get(rootUrl + '/users/'+UserService.userID+'/frontpage').
     success(function(data) {
         $scope.posts = data;
@@ -52,35 +51,92 @@ angular.module('taggit')
     });
 })
 
-.controller('new_postController', function($scope, $http, rootUrl, UserService){
-    $scope.pageClass = 'page-new_post';   
+.controller('new_postController', function($scope, $http, $location, rootUrl, UserService){
+    $scope.submitPost = function() {
+        // title, body, tags (array of tagnames)
+        var tagList = $scope.tags.split(',');
+        var i;
+        // Force lowercase, trim spaces
+        for(i = 0; i < tagList.length; i++) {
+            tagList[i] = tagList[i].trim().toLowerCase();
+        }
+        
+        var request = {title:$scope.title, body:$scope.body, tags:tagList};
+        console.log(request);
+        
+        $http.post(rootUrl + '/posts', request).
+            success(function() {
+                $location.path("/");
+            }).
+            error(function() {
+                console.log("DID NOT CREATE POST");
+                $location.path("/");
+            });
+    }
 })
 
-.controller('user_postsController', function($scope, $http, rootUrl, UserService){
-    $scope.pageClass = 'page-user_posts';   
+.controller('user_postsController', function($scope, $http, $location, rootUrl, UserService){
+    $scope.userID = $location.search()['authorID'];
+})
+
+.controller('user_commentsController', function($scope, $http, $location, rootUrl, UserService){
+    $scope.userID = $location.search()['authorID'];
 })
 
 .controller('user_tagController', function($scope, $http, rootUrl, UserService){
-    $scope.pageClass = 'page-user_tags';   
+  
 })
 
-.controller('user_commentsController', function($scope, $http, rootUrl, UserService){
-    $scope.pageClass = 'page-user_comments';   
+.controller('tagController', function($scope, $http, $location, rootUrl, UserService){
+    var tagID = $location.search()['id'];
+    $http.get(rootUrl + '/tags/' + tagID + '/posts').
+    success(function(data) {
+        $scope.posts = data;
+        console.log(data);
+    });
 })
 
-.controller('tagController', function($scope, $http, rootUrl, UserService){
-    $scope.pageClass = 'page-tag';   
+.controller('commentsController', function($scope, $http, $location, rootUrl, UserService){
+    $scope.postData;
+    $scope.comments;
+
+    var postID = $location.search()['postID'];
+    
+    $http.get(rootUrl + '/posts/' + postID).
+        success(function(data) {
+            $scope.postData = data;
+            console.log(data);
+        })
+    
+    $http.get(rootUrl + '/posts/' + postID + '/comments').
+        success(function(data) {
+            $scope.comments = data;
+            console.log(data);
+        });
 })
+
 
 .controller('taggitController', function($scope, $http, $location, rootUrl, UserService) {
     $scope.$on("loginStatusChanged", function() {
         $scope.showNav = UserService.loggedIn;
-        console.log(UserService.loggedIn);
+        $scope.topTags = [];
 
         $http.get(rootUrl + '/users/' + UserService.userID).
         success(function(data) {
-            $scope.user = data;
+            $scope.user = data[0];
+            console.log(data[0]);
+            for(var tag in data[0].tags) {
+                var obj = data[0].tags[tag];
+                console.log(obj);
+                if(obj.top == 1) {
+                    $scope.topTags.push(obj);
+                    console.log(obj.name);
+                }
+            }
+            
         });
+        
+        
     })
  
 

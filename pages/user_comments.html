@@ -1,11 +1,11 @@
 <!--begin subnav   -->
 <div class="row ">
     <div class = "btn-group btn-block btn-group-md">
-        <a id = "posts-button" class="btn btn-primaryrect" style="width:33%" href = "#user_posts">Posts by {{user[0].username}}</a>
+        <a id = "posts-button" class="btn btn-primaryrect col-md-4" ng-href = "#user_posts?authorID={{userID}}">Posts by {{user[0].username}}</a>
 
-        <a id = "comments-button" class="btn btn-primary active rect" style="width:34%" href = "#user_comments">Comments by {{user[0].username}}</a>
+        <a id = "comments-button" class="btn btn-primary active rect col-md-4" ng-href = "#user_comments?authorID={{userID}}">Comments by {{user[0].username}}</a>
 
-        <a id = "tags-button" class="btn btn-primary rect " style="width:33%" href = "#user_tags">Manage tags</a>
+        <a id = "tags-button" class="btn btn-primary rect col-md-4" href = "#user_tags">Manage tags</a>
     </div>
 </div>
 <!--End subnav-->
