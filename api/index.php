@@ -291,9 +291,9 @@ $app->group('/v1', function() use ($app) {
                 $stmt = $db->prepare($sql);
                 $stmt->bindParam(":ID", $id, PDO::PARAM_INT);
                 $stmt->execute();
-
-                $timeInterval = getTimeInterval($row['dateTime']);
+                         
                 foreach($stmt as $row) {
+                    $timeInterval = getTimeInterval($row['dateTime']);
                     $result[] = array(
                         "ID" => $row['id'],
                         "parentID" => $row['postID'],
@@ -353,7 +353,8 @@ $app->group('/v1', function() use ($app) {
             $sql = "INSERT INTO Users (name, passwordHash, email, score)
                     VALUES (:name, :passwordHash, :email, 0)";
             $defaultTags = "INSERT INTO Subscriptions (tagID, userID, onTop)
-                    VALUES (46, :userID, 1)";
+                    VALUES (46, :userID, 1);
+                    UPDATE Tags SET usercount=usercount+1 WHERE ID = 46";
 
             try {
                 // Check name uniqueness
