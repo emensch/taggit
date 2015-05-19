@@ -114,6 +114,24 @@ a:hover{
     border-bottom-color:#f74856;
 }
 
+#user-posts-button{
+    background-color:#888;
+    /*    border:none;*/
+    color:white;
+    border-style: none none solid none;
+    border-width:5px;
+    border-color:#888;
+    border-radius:0px;
+    width:50%;
+    margin-left: 0;
+    -webkit-box-shadow: none;
+}
+
+#user-posts-button:hover, #user-posts-button.active{
+    /*    background-color:#bc83a4;   */
+    border-bottom-color:#f74856;
+}
+
 
 #comments-button{
     background-color:#888;
@@ -135,6 +153,25 @@ a:hover{
 
 }
 
+#user-comments-button{
+    background-color:#888;
+    /*    border:none;*/
+    color:white;
+    border-style: none none solid none;
+    border-width:5px;
+    border-radius:0px;
+    width:50%%;
+    border-color:#888;
+    margin-left: 0;
+    -webkit-box-shadow: none;
+}
+
+
+#user-comments-button:hover,  #user-comments-button.active{
+    /*    background-color:#65a9da;   */
+    border-bottom-color:#f7ea48;
+
+}
 
 
 #tags-button{
