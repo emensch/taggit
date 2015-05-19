@@ -3,7 +3,7 @@
     <div class = "btn-group btn-block btn-group-md">
         <a id = "posts-button" class="btn btn-primaryrect" style="width:50%" href = "#new_post">Submit a new post in {{tag.name}}</a>
 
-        <a id = "comments-button" class="btn btn-primary rect" style="width:50%" href = "">Subscribe</a>
+        <button ng-click="subscribe()" id = "comments-button" class="btn btn-primary rect" style="width:50%">Subscribe</a>
 
     </div>
 </div>
@@ -36,16 +36,18 @@
 
                 </div>
                 <div class="col-xs-11">
-                    <h2><a href = #>{{post.title}}</a></h2>
+                    <h2><a ng-href="#comments?postID={{post.ID}}">{{post.title}}</a></h2>
 
                     <p ng-repeat="tag in post.tags" class="pull-right" > 
-                        <a ng-href="#tag?id={{tag.id}}"> <span class="label post-tag" href> {{tag.name}} </span> </a>
+                        <a ng-href="#tag?id={{tag.id}}&name={{tag.name}}"> <span class="label post-tag"> {{tag.name}} </span> </a>
                     </p>
+                    
                     <ul class="list-inline">
                         <li><p><i class="glyphicon glyphicon-time"></i> {{post.dateTime}} </p></li>
-                        <li><a href="#"><i class="glyphicon glyphicon-user"></i> by {{post.authorName}} </a></li>
-                        <li><a href="#"><i class="glyphicon glyphicon-comment"></i> view comments ({{post.numComments}}) </a></li>
+                        <li><a ng-href="#user_posts?authorID={{post.authorID}}&authorName={{post.authorName}}"><i class="glyphicon glyphicon-user"></i> by {{post.authorName}} </a></li>
+                        <li><a ng-href="#comments?postID={{post.ID}}"><i class="glyphicon glyphicon-comment"></i> view comments ({{post.numComments}}) </a></li>
                     </ul>
+                    
                 </div>
             </div>
             <hr>
@@ -53,7 +55,7 @@
 
         <!--        End Post        -->
     </ul>
-
+    
 
 </div>
 

@@ -76,23 +76,30 @@ angular.module('taggit')
 })
 
     .controller('user_postsController', function($scope, $http, $location, rootUrl, UserService){
-    $scope.userID = $location.search()['authorID'];
-})
-
-    .controller('user_commentsController', function($scope, $http, $location, rootUrl, UserService){
-    $scope.userID = $location.search()['authorID'];
-})
-
-
-// controller for My Tags
-    .controller('my_tagsController', function($scope, $http, rootUrl, UserService){
-    $http.get(rootUrl + '/users/'+UserService.userID+'/tags').
+    userID = $location.search()['authorID'];
+    $scope.userID = userID
+    $scope.username = $location.search()['authorName'];
+    $http.get(rootUrl + '/users/'+userID+'/posts').
     success(function(data){
         $scope.posts = data;
-        console.log("inside my tags");
+        console.log("inside user posts controller");
         console.log(data);
     });
 })
+
+    .controller('user_commentsController', function($scope, $http, $location, rootUrl, UserService){
+    userID = $location.search()['authorID'];
+    $scope.userID = userID
+    $scope.username = $location.search()['authorName'];
+    $http.get(rootUrl + '/users/'+userID+'/comments').
+    success(function(data){
+        $scope.comments = data;
+        console.log("inside user comments");
+        console.log(data);
+    });
+})
+
+
 
     .controller('frontController', function($scope, $http, rootUrl, UserService){
     $http.get(rootUrl + '/users/'+UserService.userID+'/frontpage').
@@ -101,6 +108,9 @@ angular.module('taggit')
         //        console.log(data);
     });
 })
+
+
+
 
 
 // controller for My Posts
@@ -123,13 +133,48 @@ angular.module('taggit')
     });        
 })
 
+
+// controller for My Tags
+    .controller('my_tagsController', function($scope, $http, rootUrl, UserService){
+    $http.get(rootUrl + '/users/'+UserService.userID+'/subscriptions').
+    success(function(data){
+        $scope.subscriptions = data;
+        console.log("inside my subscriptions");
+        console.log(data);
+    });
+    $scope.unsubscribe = function(tagID){
+        $http.delete(rootUrl + '/subscriptions/'+tagID).
+        success(function(){
+            console.log("UNSUBBED FROM "+tagID);    
+        }).error(function(){
+            console.log("DID NOT UNSUB");
+        })
+    }
+
+})
+
+// tag controller
     .controller('tagController', function($scope, $http, $location, rootUrl, UserService){
     var tagID = $location.search()['id'];
+    var name = $location.search()['name'];
     $http.get(rootUrl + '/tags/' + tagID + '/posts').
     success(function(data) {
         $scope.posts = data;
         //        console.log(data);
     });
+
+    $scope.subscribe = function(){
+        var request = {tagName:name};
+        $http.post(rootUrl + '/subscriptions',request).
+        success(function(){
+            console.log("SUBSCRIBED TO "+name);           
+        }).
+        error(function(){
+            console.log("DID NOT SUBSCRIBE");
+        });
+
+    }
+
 })
 
     .controller('commentsController', function($scope, $http, $location, rootUrl, UserService){

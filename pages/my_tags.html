@@ -1,34 +1,34 @@
-
 <!--begin subnav   -->
 <div class="row ">
-    <div class = "btn-group btn-block btn-group-md">
-        <a id = "posts-button" class="btn btn-primary rect" style="width:33%" href = "#user_posts">Posts by {{user[0].username}}</a>
+    <div style = "margin-left:0;" class = "btn-group btn-block btn-group-md">
+        <a id = "posts-button" class="btn btn-primaryrect " ng-href = "#my_posts">Posts by {{user.username}}</a>
 
-        <a id = "comments-button" class="btn btn-primary rect" style="width:34%" href = "#user_comments">Comments by {{user[0].username}}</a>
+        <a id = "comments-button" class="btn btn-primary rect" ng-href = "#my_comments">Comments by {{user.username}}</a>
 
-        <a id = "tags-button" class="btn btn-primary rect active " style="width:33%" href = "#user_tags">Manage tags</a>
+        <a id = "tags-button" class="btn btn-primary rect active" ng-href = "#my_tags">Manage tags</a>
     </div>
 </div>
 <!--End subnav-->
+
 
 <div class="col-md-8" style="float:none; margin: 0 auto">
 
 
 
-    <ul class = "post-list" ng-repeat="post in posts">
+    <ul class = "post-list" ng-repeat="tag in subscriptions">
         <!--        Start Post      -->
         <li>
 
             <div class="row">   
 
                 <div class="col-xs-11">
-                    <h2><a href = #>donkus</a></h2>
+                    <h2><a ng-href = "#tag?id={{tag.id}}&name={{tag.name}}">{{tag.name}}</a></h2>
 
                     <ul class="list-inline">
 
-                        <li><a href="#"><i class="glyphicon glyphicon-user"></i> 900 subscribers </a></li>
+                        <li><span><i class="glyphicon glyphicon-user"></i> {{tag.subscribers}} subscribers </span></li>
                         <li>
-                            <a href = "#"> <span id= "comments-button" class="label"> unsubscribe </span> </a>
+                            <button ng-click="unsubscribe(tag.id)" class = "btn btn-primary"> unsubscribe </button>
                         </li>
 
 

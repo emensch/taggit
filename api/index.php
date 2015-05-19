@@ -299,7 +299,7 @@ $app->group('/v1', function() use ($app) {
                         "parentID" => $row['postID'],
                         "authorID" => $row['authorID'],
                         "parentTitle" => $row['parentTitle'],
-"authorName" => $row['name'],
+                        "authorName" => $row['name'],
                         "body" => $row['body'],
                         "editedOn" => $row['editedOn'],
                         "dateTime" => $timeInterval
@@ -318,9 +318,8 @@ $app->group('/v1', function() use ($app) {
         // Get user with ID's subscriptions
         $app->get('/:id/subscriptions', 'authenticateKey', function ($id) {
             $result = array();
-            $sql = "SELECT Tags.*, Users.name FROM Tags, Subscriptions, Users 
-                    WHERE Users.ID = :ID AND Users.ID = Subscriptions.userID AND Tags.ID = Subscriptions.tagID";
-
+            $sql = "SELECT Tags.* FROM Tags, Subscriptions 
+                    WHERE :ID = Subscriptions.userID AND Tags.ID = Subscriptions.tagID";
             try {
                 $db = getConnection();
                 $stmt = $db->prepare($sql);
@@ -328,20 +327,18 @@ $app->group('/v1', function() use ($app) {
                 $stmt->execute();
                 foreach($stmt as $row) {
                     $result[] = array(
-                        "tagID" => $row['ID'],
-                        "tagName" => $row['name'],
+                        "id" => $row['ID'],
+                        "name" => $row['name'],
                         "subscribers" => $row['usercount']
                     );
                 }
-
             } catch(Exception $e) {
                 $app->response->setStatus(500);
                 echo $e;
             }
             echo json_encode($result);
         });
-
-
+        
 
         // Add a user
         $app->post('/', function() use ($app) {
