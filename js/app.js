@@ -24,19 +24,19 @@ angular.module('taggit', [
         controller  : 'my_postsController'
     })
 
-        
+
         .when('/my_comments', {
         templateUrl : 'pages/my_comments.html',
         controller  : 'my_commentsController'
     })
-    
-    
+
+
         .when('/my_tags', {
         templateUrl : 'pages/my_tags.html',
         controller  : 'my_tagsController'
     })
 
-        
+
         .when('/user_posts', {
         templateUrl : 'pages/user_posts.html',
         controller  : 'user_postsController'
@@ -46,7 +46,7 @@ angular.module('taggit', [
         templateUrl : 'pages/user_comments.html',
         controller  : 'user_commentsController'
     })
-    
+
     // Route for login page
         .when('/login', {
         templateUrl : 'pages/login.html',
@@ -67,6 +67,12 @@ angular.module('taggit', [
         templateUrl : 'pages/comments.html',
         controller : 'commentsController'
     })
+
+        .when('/edit_post',{
+        templateUrl : 'pages/edit_post.html',
+        controller : 'edit_postController'
+    })
+
 
     //$locationProvider.html5Mode(true);
 

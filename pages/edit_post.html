@@ -1,27 +1,27 @@
-            <!--        Start Body      -->
+<!--        Start Body      -->
+<div class="row">
+    <div class="col-sm-8" style="float:none; margin: 0 auto">
+        <h3> Edit post </h3>
+        <h3> {{post.title}}</h3>
+        <form ng-submit = "edit()">
+            
+            <div class="form-group">
+                <input ng-model="title" type="text" class="form-control input-lg" value="{{post.title}}">
+            </div>
+
+<!--placeholder="{{post.body}}"-->
+            
+            <div class="form-group">
+                <textarea ng-model="body" class = "form-control input-lg"  rows="10">{{post.body}}</textarea>
+
+            </div>
+
             <div class="row">
-                <div class="col-sm-8" style="float:none; margin: 0 auto">
-                    <h3> Edit post </h3>
-
-                    <div class="form-group">
-                        <input type="text" class="form-control input-lg" value="Old title">
-                    </div>
-
-
-                    <div class="form-group">
-                        <textarea class = "form-control input-lg"  rows="10">Old body</textarea>
-
-                    </div>
-
-                    <div class="form-group">
-                        <input type="text" class="form-control input-lg" value="Old tags (seperated by commas)">
-                    </div>
-
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <a class="btn btn-primary btn-lg btn-block" href = "comments.html">Submit changes</a>
-                        </div>
-                    </div>
-
+                <div class="col-xs-12">
+                    <button class="btn btn-primary btn-lg btn-block">Submit changes</button>
                 </div>
             </div>
+
+        </form>
+    </div>
+</div>

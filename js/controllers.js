@@ -68,13 +68,36 @@ angular.module('taggit')
     }
 })
 
-
+// edit_post page controller
     .controller('edit_postController', function($scope, $http, $location, rootUrl, UserService){
-    $scope.editPost = function(){
+    var postID = $location.search()['id'];
 
+    // get old content
+    $http.get(rootUrl + '/posts/'+postID).
+    success(function(data){
+        console.log("RETRIEVED POST WITH ID "+postID);
+        console.log(data[0]);
+        $scope.post = data[0];
+    }).
+    error(function(){
+        console.log("FAILED TO RETRIEVE POST WITH ID "+postID);
+        $location.path("/");
+    });
+
+    // put new content
+    $scope.edit = function(){
+        var request = {title:$scope.title,body:$scope.body};
+        console.log("EDITTING POST WITH ID "+postID);
+        $http.put(rootUrl + '/posts/'+postID, request).
+        success(function(){
+            console.log("EDITTED POST WITH ID " +postID);
+            $location.path("/my_posts");
+//            ng-href = "#comments?postID={{post.ID}}"
+        });
     }
 })
 
+// user_posts page controller
     .controller('user_postsController', function($scope, $http, $location, rootUrl, UserService){
     userID = $location.search()['authorID'];
     $scope.userID = userID
@@ -217,14 +240,14 @@ angular.module('taggit')
             $location.path("/");
         });
     }
-    
+
     $scope.submitComment = function(postID){
         var request = {body:$scope.body};
         $http.post(rootUrl + '/posts/' + postID + '/comments', request).
         success(function(){
             console.log("COMMENT ADDED TO POST WITH ID " + postID);
         }).error(function(){
-          console.log("FAILED TO ADD COMMENT TO POST WITH ID " + postID);  
+            console.log("FAILED TO ADD COMMENT TO POST WITH ID " + postID);  
         });
     }  
 })

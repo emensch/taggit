@@ -47,6 +47,7 @@
                         <li><a ng-href="#user_posts?authorID={{post.authorID}}&authorName={{post.authorName}}"><i class="glyphicon glyphicon-user"></i> by {{post.authorName}} </a></li>
                         <li><a ng-href="#comments?postID={{post.ID}}"><i class="glyphicon glyphicon-comment"></i> view comments ({{post.numComments}}) </a></li>
                         <li><a href="#my_posts" ng-click="delete(post.ID)"><i class="glyphicon glyphicon-trash"></i> delete post </a></li>
+                        <li><a href="#edit_post?id={{post.ID}}"><i class="glyphicon glyphicon-pencil"></i> edit post </a></li>
                     </ul>
                     
                 </div>
