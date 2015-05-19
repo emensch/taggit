@@ -1,40 +1,54 @@
-            <!--        Start Body      -->
-            <div class="col-md-8" style="float:none; margin: 0 auto">
-                <!--        Start Post      -->
+<!--        Start Body      -->
+<div class="col-md-8" style="float:none; margin: 0 auto">
+    <!--        Start Post      -->
 
-                <div class = "row">
+    <div class = "row">
 
-                    <h3>{{postData[0].title}}</h3>
-                    <p>{{postData[0].body}}</p>
-                    <p ng-repeat="tag in postData[0].tags" class="pull-right" > 
-                                    <a href = "tag.html"> <span class="label label-default" href> {{ tag.name }} </span> </a>
-                    </p>
-                    <ul class="list-inline" style="none">
-                        <li><span><i class="glyphicon glyphicon-time"></i> {{postData[0].dateTime}} </span></li>
-                        <li><a ng-href="#user_posts?authorID={{postData[0].authorID}}&authorName={{postData[0].authorName}}"><i class="glyphicon glyphicon-user"></i> by {{postData[0].authorName}} </a></li>    
+        <h2>{{postData[0].title}}</h2>
+        <h4>{{postData[0].body}}</h4>
+        <p ng-repeat="tag in postData[0].tags" class="pull-right" > 
+            <a href = "tag.html"> <span class="label label-default" href> {{ tag.name }} </span> </a>
+        </p>
+        <ul class="list-inline" style="none">
+            <li><span><i class="glyphicon glyphicon-time"></i> {{postData[0].dateTime}} </span></li>
+            <li><a ng-href="#user_posts?authorID={{postData[0].authorID}}&authorName={{postData[0].authorName}}"><i class="glyphicon glyphicon-user"></i> by {{postData[0].authorName}} </a></li>    
+        </ul>
+
+
+        <hr>
+    </div>
+    <!--        End Post        -->
+    <!--        Start Commnent      -->
+
+    <ul class = "comment-list" ng-repeat="comment in comments" style="padding-left: 0; list-style: none">
+        <li>
+            <div class="row" style="none">   
+                <div class="col-md-8" style="padding-left: 0">
+                    <blockquote> {{comment.body}} </blockquote>
+                    <ul class="list-inline">
+                        <li><span><i class="glyphicon glyphicon-time"></i> {{comment.dateTime}} </span></li>
+                        <li><a href="#user_posts?authorID={{comment.authorID}}&authorName={{comment.authorName}}"><i class="glyphicon glyphicon-user"></i> by {{comment.authorName}} </a></li>
+
                     </ul>
-                    
-
-                    <hr>
                 </div>
-                <!--        End Post        -->
-                <!--        Start Commnent      -->
-
-                <ul class = "comment-list" ng-repeat="comment in comments" style="padding-left: 0; list-style: none">
-                    <li>
-                        <div class="row" style="none">   
-                            <div class="col-md-8" style="padding-left: 0">
-                                <ul class="list-inline">
-                                    <li><span><i class="glyphicon glyphicon-time"></i> {{comment.dateTime}} </span></li>
-                                    <li><a href="#user_posts?authorID={{comment.authorID}}&authorName={{comment.authorName}}"><i class="glyphicon glyphicon-user"></i> by {{comment.authorName}} </a></li>
-                                    
-                                </ul>
-                                <p> {{comment.body}} </p>
-                            </div>
-                            <!--         End Comment       --> 
-                        </div>
-                    </li>
-                </ul>
+                <!--         End Comment       --> 
             </div>
             
-            <!--        End Body        -->
+            <hr>
+            
+        </li>
+    </ul>
+    <p>{{postData[0].ID}}</p>
+    <form ng-submit = "submitComment(postData[0].ID)">
+        <div class="form-group">
+            <textarea class = "form-control input-lg" placeholder="Say something!" rows="4" ng-model="body"></textarea>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <button class="btn btn-primary btn-lg btn-block" href = "#/">Submit comment</button>
+            </div>
+        </div>
+    </form>           
+</div>
+
+<!--        End Body        -->

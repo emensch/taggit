@@ -118,10 +118,21 @@ angular.module('taggit')
     $http.get(rootUrl + '/users/'+UserService.userID+'/posts').
     success(function(data){
         $scope.posts = data;
-        console.log("inside controller");
+        console.log("inside my posts controller");
         console.log(data);
     });
+
+    // delete post with ID
+    $scope.delete = function(postID){
+        $http.delete(rootUrl + '/posts/'+postID).
+        success(function(){
+            console.log("POST DELETED WITH ID " + postID);   
+        }).error(function(){
+            console.log("POST DELETE UNSUCCESSFUL")   
+        });
+    }
 })
+
 
 // controller for My Comments
     .controller('my_commentsController', function($scope, $http, rootUrl, UserService){
@@ -142,6 +153,8 @@ angular.module('taggit')
         console.log("inside my subscriptions");
         console.log(data);
     });
+
+    // unsubscribe to tag with ID
     $scope.unsubscribe = function(tagID){
         $http.delete(rootUrl + '/subscriptions/'+tagID).
         success(function(){
@@ -177,33 +190,43 @@ angular.module('taggit')
 
 })
 
+// comments controller
     .controller('commentsController', function($scope, $http, $location, rootUrl, UserService){
     $scope.postData;
     $scope.comments;
     $scope.showDelete = false;
-
     var postID = $location.search()['postID'];
 
+    //get post with ID
     $http.get(rootUrl + '/posts/' + postID).
     success(function(data) {
         $scope.postData = data;
         console.log(data);
     })
 
-    //    if(postData.authorID == UserService.userID)
-
+    // get comments for post with ID
     $http.get(rootUrl + '/posts/' + postID + '/comments').
     success(function(data) {
         $scope.comments = data;
-        //        console.log(data);
     });
 
+    // delete post with ID
     $scope.deletePost = function() {
         $http.delete(rootUrl + '/posts/' + postID).
         success(function() {
             $location.path("/");
         });
     }
+    
+    $scope.submitComment = function(postID){
+        var request = {body:$scope.body};
+        $http.post(rootUrl + '/posts/' + postID + '/comments', request).
+        success(function(){
+            console.log("COMMENT ADDED TO POST WITH ID " + postID);
+        }).error(function(){
+          console.log("FAILED TO ADD COMMENT TO POST WITH ID " + postID);  
+        });
+    }  
 })
 
 
