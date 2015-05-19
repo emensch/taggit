@@ -7,7 +7,7 @@
         <h2>{{postData[0].title}}</h2>
         <h4>{{postData[0].body}}</h4>
         <p ng-repeat="tag in postData[0].tags" class="pull-right" > 
-            <a href = "tag.html"> <span class="label post-tag" href> {{ tag.name }} </span> </a>
+            <a ng-href = "#tag?id={{tag.id}}&name={{tag.name}}"> <span class="label post-tag" href> {{ tag.name }} </span> </a>
         </p>
         <ul class="list-inline" style="none">
             <li><span><i class="glyphicon glyphicon-time"></i> {{postData[0].dateTime}} </span></li>
