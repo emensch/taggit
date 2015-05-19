@@ -8,35 +8,35 @@ require 'password.php';
 $app = new \Slim\Slim();
 
 $app->get('/', function() use ($app) {
-    $result = array();
-    $sql = "SELECT * FROM Users ORDER BY name";
-    $sql2 = "SELECT Tags.name, Tags.id, Subscriptions.onTop FROM Subscriptions, Tags 
+            $result = array();
+            $sql = "SELECT * FROM Users ORDER BY name";
+            $sql2 = "SELECT Tags.name, Tags.id, Subscriptions.onTop FROM Subscriptions, Tags 
                     WHERE Tags.ID = Subscriptions.tagID 
                     AND Subscriptions.userID = :userID";
-    try { 
-        $db = getConnection();
-        $stmt = $db->prepare($sql);
-        $query = $db->query($sql);
-        foreach($query as $row) {
-            $stmt2 = $db->prepare($sql2);
-            $stmt2->bindParam(":userID", $row['ID'], PDO::PARAM_INT);
-            $stmt2->execute();
-            $tags = array();
-            foreach($stmt2 as $row2) {
-                $tags[] = array("name" => $row2['name'], "id" => $row2['id'], "top" => $row2['onTop']);
+            try { 
+                $db = getConnection();
+                $stmt = $db->prepare($sql);
+                $query = $db->query($sql);
+                foreach($query as $row) {
+                    $stmt2 = $db->prepare($sql2);
+                    $stmt2->bindParam(":userID", $row['ID'], PDO::PARAM_INT);
+                    $stmt2->execute();
+                    $tags = array();
+                    foreach($stmt2 as $row2) {
+                        $tags[] = array("name" => $row2['name'], "id" => $row2['id'], "top" => $row2['onTop']);
+                    }
+                    $result[] = array(
+                        "username" => $row['name'],
+                        "email" => $row['email'],
+                        "score" => $row['score'],
+                        "tags" => $tags
+                    );    
+                }
+            } catch(Exception $e) {
+                $app->response->setStatus(500);
+                echo $e;
             }
-            $result[] = array(
-                "username" => $row['name'],
-                "email" => $row['email'],
-                "score" => $row['score'],
-                "tags" => $tags
-            );    
-        }
-    } catch(Exception $e) {
-        $app->response->setStatus(500);
-        echo $e;
-    }
-    echo json_encode($result);    
+            echo json_encode($result);    
 });
 
 // v1 group 
@@ -136,7 +136,7 @@ $app->group('/v1', function() use ($app) {
             }
             echo json_encode($result);
         });
-
+        
         // Get user with ID
         $app->get('/:id', 'authenticateKey', function ($id) {
             $result = array();
@@ -184,7 +184,7 @@ $app->group('/v1', function() use ($app) {
             $sql2 = "SELECT Tags.ID, Tags.name FROM Tags, PostTags
                     WHERE Tags.ID = PostTags.tagID
                     AND PostTags.postID = :postID";
-
+                    
             try {
                 $db = getConnection();
                 $stmt = $db->prepare($sql);
@@ -299,7 +299,7 @@ $app->group('/v1', function() use ($app) {
                         "parentID" => $row['postID'],
                         "authorID" => $row['authorID'],
                         "parentTitle" => $row['parentTitle'],
-"authorName" => $row['name'],
+                        "authorName" => $row['name'],
                         "body" => $row['body'],
                         "editedOn" => $row['editedOn'],
                         "dateTime" => $timeInterval
@@ -313,36 +313,6 @@ $app->group('/v1', function() use ($app) {
             echo json_encode($result);
         });
 
-
-
-        // Get user with ID's subscriptions
-        $app->get('/:id/subscriptions', 'authenticateKey', function ($id) {
-            $result = array();
-            $sql = "SELECT Tags.*, Users.name FROM Tags, Subscriptions, Users 
-                    WHERE Users.ID = :ID AND Users.ID = Subscriptions.userID AND Tags.ID = Subscriptions.tagID";
-
-            try {
-                $db = getConnection();
-                $stmt = $db->prepare($sql);
-                $stmt->bindParam(":ID", $id, PDO::PARAM_INT);
-                $stmt->execute();
-                foreach($stmt as $row) {
-                    $result[] = array(
-                        "tagID" => $row['ID'],
-                        "tagName" => $row['name'],
-                        "subscribers" => $row['usercount']
-                    );
-                }
-
-            } catch(Exception $e) {
-                $app->response->setStatus(500);
-                echo $e;
-            }
-            echo json_encode($result);
-        });
-
-
-
         // Add a user
         $app->post('/', function() use ($app) {
             $json = $app->request->getBody();
@@ -350,7 +320,7 @@ $app->group('/v1', function() use ($app) {
             $response = array("usernameError" => 0, "emailError" => 0, "emailFormatError" => 0);
             $entryOK = True;
 
-
+            
             $usernameQ = "SELECT COUNT(*) as nameExists FROM Users WHERE name = :username";
             $emailQ = "SELECT COUNT(*) as emailExists FROM Users WHERE email = :email";
             $sql = "INSERT INTO Users (name, passwordHash, email, score)
@@ -405,7 +375,7 @@ $app->group('/v1', function() use ($app) {
             }
 
         });
-
+        
         // Update a user
         $app->put('/:id', 'authenticateKey', function($id) use ($app) {
 
@@ -426,7 +396,7 @@ $app->group('/v1', function() use ($app) {
             $sql2 = "SELECT Tags.ID, Tags.name FROM Tags, PostTags
                     WHERE Tags.ID = PostTags.tagID
                     AND PostTags.postID = :postID";
-
+                    
             try { 
                 $db = getConnection();
                 $stmt = $db->prepare($sql);
@@ -476,7 +446,7 @@ $app->group('/v1', function() use ($app) {
             $sql2 = "SELECT Tags.ID, Tags.name FROM Tags, PostTags
                     WHERE Tags.ID = PostTags.tagID
                     AND PostTags.postID = :postID";
-
+                    
             try {
                 $db = getConnection();
                 $stmt = $db->prepare($sql);
@@ -616,7 +586,7 @@ $app->group('/v1', function() use ($app) {
                 $app->response->setStatus(500);
                 echo $e;
             } 
-
+            
         });
 
         // Update post with ID
@@ -713,7 +683,7 @@ $app->group('/v1', function() use ($app) {
                 $app->response->setStatus(500);
                 echo $e;
             }
-
+            
         });
 
         // Delete post with ID
@@ -848,7 +818,7 @@ $app->group('/v1', function() use ($app) {
             $sql2 = "SELECT Tags.ID, Tags.name FROM Tags, PostTags
                     WHERE Tags.ID = PostTags.tagID
                     AND PostTags.postID = :postID";
-
+                    
             try {
                 $db = getConnection();
                 $stmt = $db->prepare($sql);
@@ -1057,7 +1027,6 @@ function getTimeInterval($dateTime) {
 
 function getConnection() {
     $dbhost = "127.0.0.1";
-    //    $dbhost = "192.254.188.229";
     $dbuser = "mcgrail_group5";
     $dbpass = "f1v3@l1v3";
     $dbname = "mcgrail_group5";

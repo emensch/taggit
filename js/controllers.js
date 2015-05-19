@@ -86,14 +86,19 @@ angular.module('taggit')
 
 // controller for My Tags
     .controller('my_tagsController', function($scope, $http, rootUrl, UserService){
-
+    $http.get(rootUrl + '/users/'+UserService.userID+'/tags').
+    success(function(data){
+        $scope.posts = data;
+        console.log("inside my tags");
+        console.log(data);
+    });
 })
 
     .controller('frontController', function($scope, $http, rootUrl, UserService){
     $http.get(rootUrl + '/users/'+UserService.userID+'/frontpage').
     success(function(data) {
         $scope.posts = data;
-//        console.log(data);
+        //        console.log(data);
     });
 })
 
@@ -123,7 +128,7 @@ angular.module('taggit')
     $http.get(rootUrl + '/tags/' + tagID + '/posts').
     success(function(data) {
         $scope.posts = data;
-//        console.log(data);
+        //        console.log(data);
     });
 })
 
@@ -145,7 +150,7 @@ angular.module('taggit')
     $http.get(rootUrl + '/posts/' + postID + '/comments').
     success(function(data) {
         $scope.comments = data;
-//        console.log(data);
+        //        console.log(data);
     });
 
     $scope.deletePost = function() {
