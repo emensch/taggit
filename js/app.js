@@ -2,8 +2,11 @@ angular.module('taggit', [
     'ngRoute'
 ])
 
-    .config(function($httpProvider){
+    .config(function($httpProvider) {
     $httpProvider.interceptors.push('authInterceptor')
+})
+    .config(function($sceProvider) {
+    $sceProvider.enabled(false);
 })
     .config(function($routeProvider, $locationProvider) {
     $routeProvider

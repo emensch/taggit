@@ -180,6 +180,7 @@ angular.module('taggit')
 
     });
 
+
     // unsubscribe to tag with ID
     $scope.unsubscribe = function(tagID){
         $http.delete(rootUrl + '/subscriptions/'+tagID).
@@ -210,6 +211,52 @@ angular.module('taggit')
             });            
         }).error(function(){
             console.log("DID NOT UNSUB");
+        })
+    }
+
+    $scope.putOnTop = function(tagID){
+        var request = {onTop:1}
+        console.log("inside put top controller");
+        $http.put(rootUrl + '/subscriptions/'+tagID,request).
+        success(function(){
+
+            $http.get(rootUrl + '/users/' + UserService.userID).
+            success(function(data) {
+                $scope.$parent.topTags = [];
+                $scope.$parent.user = data[0];
+                console.log(data[0]);
+                for(var tag in data[0].tags) {
+                    var obj = data[0].tags[tag];
+                    console.log(obj);
+                    if(obj.top == 1) {
+                        $scope.$parent.topTags.push(obj);
+                        console.log(obj.name);
+                    }
+                }
+            });   
+        })
+    }
+
+    $scope.removeFromTop = function(tagID){
+        var request = {onTop:0}
+        console.log("inside remove top controller");
+        $http.put(rootUrl + '/subscriptions/'+tagID,request).
+        success(function(){
+            
+            $http.get(rootUrl + '/users/' + UserService.userID).
+            success(function(data) {
+                $scope.$parent.topTags = [];
+                $scope.$parent.user = data[0];
+                console.log(data[0]);
+                for(var tag in data[0].tags) {
+                    var obj = data[0].tags[tag];
+                    console.log(obj);
+                    if(obj.top == 1) {
+                        $scope.$parent.topTags.push(obj);
+                        console.log(obj.name);
+                    }
+                }
+            });   
         })
     }
 

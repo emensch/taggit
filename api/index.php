@@ -352,6 +352,8 @@ $app->group('/v1', function() use ($app) {
             $emailQ = "SELECT COUNT(*) as emailExists FROM Users WHERE email = :email";
             $sql = "INSERT INTO Users (name, passwordHash, email, score)
                     VALUES (:name, :passwordHash, :email, 0)";
+            $defaultTags = "INSERT INTO Subscriptions (tagID, userID, onTop)
+                    VALUES (46, :userID, 1)";
 
             try {
                 // Check name uniqueness
@@ -391,6 +393,11 @@ $app->group('/v1', function() use ($app) {
                     $stmt->bindParam(":name", $data['name']);
                     $stmt->bindParam(":passwordHash", $hash);
                     $stmt->bindParam(":email", $data['email']);
+                    $stmt->execute();
+                    
+                    // Add default tag
+                    $stmt = $db->prepare($defaultTags);
+                    $stmt->bindParam(":userID", $db->lastInsertID(), PDO::PARAM_INT);
                     $stmt->execute();
                     $app->response->setStatus(201);
                 } else {

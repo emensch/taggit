@@ -16,7 +16,7 @@
 
 
     <ul class = "post-list" ng-repeat="tag in subscriptions">
-        <!--        Start Post      -->
+        <!--        Start Tag      -->
         <li>
 
             <div class="row">   
@@ -30,17 +30,20 @@
                         <li>
                             <button ng-click="unsubscribe(tag.id)" class = "btn btn-primary"> unsubscribe </button>
                         </li>
+
                         <li>
-                            <button ng-click="unsubscribe(tag.id)" class = "btn btn-primary"> unsubscribe </button>
+                            <button ng-click="putOnTop(tag.id)" class = "btn btn-primary"> add to favorites </button>
                         </li>
 
+                        <li>
+                            <button ng-click="removeFromTop(tag.id)" class = "btn btn-primary"> remove from favorites </button>
+                        </li>
 
                     </ul>
                 </div>
             </div>
         </li>
-
-        <!--        End Post        -->
+        <!--        End Tag        -->
     </ul>
 
 
