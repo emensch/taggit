@@ -2,6 +2,7 @@
 
 require '../Slim/Slim.php';
 require 'password.php';
+require 'config.php';
 
 \Slim\Slim::registerAutoloader();
 
@@ -65,7 +66,7 @@ $app->group('/v1', function() use ($app) {
             $pwValid = password_verify($data['passwordHash'], $row['passwordHash']);
             if($row['valid'] >= 1 && $pwValid) {
                 // Add new API key to table
-                $value = strtotime(getTime()).$data['name'];
+                $value = strtotime(getTime()).$data['email'];
                 $key = hash("sha256", $value);
                 $stmt = $db->prepare($apikey);
                 $stmt->bindParam(":userID", $row['id']);
@@ -353,7 +354,7 @@ $app->group('/v1', function() use ($app) {
             $sql = "INSERT INTO Users (name, passwordHash, email, score)
                     VALUES (:name, :passwordHash, :email, 0)";
             $defaultTags = "INSERT INTO Subscriptions (tagID, userID, onTop)
-                    VALUES (46, :userID, 1);
+                    VALUES (1, :userID, 1);
                     UPDATE Tags SET usercount=usercount+1 WHERE ID = 46";
 
             try {
@@ -1061,11 +1062,12 @@ function getTimeInterval($dateTime) {
 }
 
 function getConnection() {
-    $dbhost = "127.0.0.1";
-    //    $dbhost = "192.254.188.229";
-    $dbuser = "mcgrail_group5";
-    $dbpass = "f1v3@l1v3";
-    $dbname = "mcgrail_group5";
+    $config = getConfig();
+
+    $dbhost = $config['db']['dbhost'];
+    $dbuser = $config['db']['dbuser'];
+    $dbpass = $config['db']['dbpass'];
+    $dbname = $config['db']['dbname'];
     $dbh = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass);
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     return $dbh;
