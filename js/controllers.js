@@ -55,14 +55,12 @@ angular.module('taggit')
         }
 
         var request = {title:$scope.title, body:$scope.body, tags:tagList};
-        console.log(request);
 
         $http.post(rootUrl + '/posts', request).
         success(function() {
             $location.path("/");
         }).
         error(function() {
-            console.log("DID NOT CREATE POST");
             $location.path("/");
         });
     }
@@ -75,24 +73,19 @@ angular.module('taggit')
     // get old content
     $http.get(rootUrl + '/posts/'+postID).
     success(function(data){
-        console.log("RETRIEVED POST WITH ID "+postID);
-        console.log(data[0]);
         $scope.post = data[0];
         $scope.body = data[0].body;
         $scope.title = data[0].title;
     }).
     error(function(){
-        console.log("FAILED TO RETRIEVE POST WITH ID "+postID);
         $location.path("/");
     });
 
     // put new content
     $scope.edit = function(){
         var request = {title:$scope.title,body:$scope.body};
-        console.log("EDITTING POST WITH ID "+postID);
         $http.put(rootUrl + '/posts/'+postID, request).
         success(function(){
-            console.log("EDITTED POST WITH ID " +postID);
             $location.path("/my_posts");
             //            ng-href = "#comments?postID={{post.ID}}"
         });
@@ -107,8 +100,6 @@ angular.module('taggit')
     $http.get(rootUrl + '/users/'+userID+'/posts').
     success(function(data){
         $scope.posts = data;
-        console.log("inside user posts controller");
-        console.log(data);
     });
 })
 
@@ -119,8 +110,6 @@ angular.module('taggit')
     $http.get(rootUrl + '/users/'+userID+'/comments').
     success(function(data){
         $scope.comments = data;
-        console.log("inside user comments");
-        console.log(data);
     });
 })
 
@@ -130,7 +119,6 @@ angular.module('taggit')
     $http.get(rootUrl + '/users/'+UserService.userID+'/frontpage').
     success(function(data) {
         $scope.posts = data;
-        //        console.log(data);
     });
 })
 
@@ -143,8 +131,6 @@ angular.module('taggit')
     $http.get(rootUrl + '/users/'+UserService.userID+'/posts').
     success(function(data){
         $scope.posts = data;
-        console.log("inside my posts controller");
-        console.log(data);
     });
 
     // delete post with ID
@@ -164,8 +150,6 @@ angular.module('taggit')
     $http.get(rootUrl + '/users/'+UserService.userID+'/comments').
     success(function(data){
         $scope.comments = data;
-        console.log("inside my comments");
-        console.log(data);
     });        
 })
 
@@ -175,9 +159,6 @@ angular.module('taggit')
     $http.get(rootUrl + '/users/'+UserService.userID+'/subscriptions').
     success(function(data){
         $scope.subscriptions = data;
-        console.log("inside my subscriptions");
-        console.log(data);
-
     });
 
 
@@ -185,13 +166,10 @@ angular.module('taggit')
     $scope.unsubscribe = function(tagID){
         $http.delete(rootUrl + '/subscriptions/'+tagID).
         success(function(){
-            console.log("UNSUBBED FROM "+tagID);
 
             $http.get(rootUrl + '/users/'+UserService.userID+'/subscriptions').
             success(function(data){
                 $scope.subscriptions = data;
-                console.log("inside my subscriptions");
-                console.log(data);
 
             });
 
@@ -199,47 +177,36 @@ angular.module('taggit')
             success(function(data) {
                 $scope.$parent.topTags = [];
                 $scope.$parent.user = data[0];
-                console.log(data[0]);
                 for(var tag in data[0].tags) {
                     var obj = data[0].tags[tag];
-                    console.log(obj);
                     if(obj.top == 1) {
                         $scope.$parent.topTags.push(obj);
-                        console.log(obj.name);
                     }
                 }
             });            
-        }).error(function(){
-            console.log("DID NOT UNSUB");
-        })
+        });
     }
 
     $scope.putOnTop = function(tagID){
         var request = {onTop:1}
-        console.log("inside put top controller");
         $http.put(rootUrl + '/subscriptions/'+tagID,request).
         success(function(){
-
             $http.get(rootUrl + '/users/' + UserService.userID).
             success(function(data) {
                 $scope.$parent.topTags = [];
                 $scope.$parent.user = data[0];
-                console.log(data[0]);
                 for(var tag in data[0].tags) {
                     var obj = data[0].tags[tag];
-                    console.log(obj);
                     if(obj.top == 1) {
                         $scope.$parent.topTags.push(obj);
-                        console.log(obj.name);
                     }
                 }
             });   
-        })
+        });
     }
 
     $scope.removeFromTop = function(tagID){
         var request = {onTop:0}
-        console.log("inside remove top controller");
         $http.put(rootUrl + '/subscriptions/'+tagID,request).
         success(function(){
             
@@ -247,17 +214,14 @@ angular.module('taggit')
             success(function(data) {
                 $scope.$parent.topTags = [];
                 $scope.$parent.user = data[0];
-                console.log(data[0]);
                 for(var tag in data[0].tags) {
                     var obj = data[0].tags[tag];
-                    console.log(obj);
                     if(obj.top == 1) {
                         $scope.$parent.topTags.push(obj);
-                        console.log(obj.name);
                     }
                 }
             });   
-        })
+        });
     }
 
 })
@@ -269,33 +233,24 @@ angular.module('taggit')
     $http.get(rootUrl + '/tags/' + tagID + '/posts').
     success(function(data) {
         $scope.posts = data;
-        //        console.log(data);
     });
 
     $scope.subscribe = function(){
         var request = {tagName:name};
         $http.post(rootUrl + '/subscriptions',request).
-        success(function(){
-            console.log("SUBSCRIBED TO "+name);   
+        success(function(){ 
             $http.get(rootUrl + '/users/' + UserService.userID).
             success(function(data) {
                 $scope.$parent.topTags = [];
                 $scope.$parent.user = data[0];
-                console.log(data[0]);
                 for(var tag in data[0].tags) {
                     var obj = data[0].tags[tag];
-                    console.log(obj);
                     if(obj.top == 1) {
                         $scope.$parent.topTags.push(obj);
-                        console.log(obj.name);
                     }
                 }
             });   
-        }).
-        error(function(){
-            console.log("DID NOT SUBSCRIBE");
         });
-
     }
 
 })
@@ -311,8 +266,7 @@ angular.module('taggit')
     $http.get(rootUrl + '/posts/' + postID).
     success(function(data) {
         $scope.postData = data;
-        console.log(data);
-    })
+    });
 
     // get comments for post with ID
     $http.get(rootUrl + '/posts/' + postID + '/comments').
@@ -336,9 +290,6 @@ angular.module('taggit')
             success(function(data) {
                 $scope.comments = data;
             });
-            console.log("COMMENT ADDED TO POST WITH ID " + postID);
-        }).error(function(){
-            console.log("FAILED TO ADD COMMENT TO POST WITH ID " + postID);  
         });
     }  
 })
@@ -352,19 +303,13 @@ angular.module('taggit')
         $http.get(rootUrl + '/users/' + UserService.userID).
         success(function(data) {
             $scope.user = data[0];
-            console.log(data[0]);
             for(var tag in data[0].tags) {
                 var obj = data[0].tags[tag];
-                console.log(obj);
                 if(obj.top == 1) {
                     $scope.topTags.push(obj);
-                    console.log(obj.name);
                 }
             }
-
         });
-
-
     })
 
 

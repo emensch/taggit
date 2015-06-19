@@ -82,7 +82,6 @@ angular.module('taggit', [
 }).run(function($rootScope, $location, UserService) {
     $rootScope.$on("$routeChangeStart", function(event, next, current) {
         if(UserService.loggedIn == false) {
-            console.log("NOT LOGGED IN");
             // no logged user, redirect to login
             if(next.templateUrl !== "pages/login.html" && next.templateUrl !== "pages/register.html") {
                 $location.path('/login');
