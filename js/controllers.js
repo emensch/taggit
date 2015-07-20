@@ -47,20 +47,17 @@ angular.module('taggit')
     .controller('new_postController', function($scope, $http, $location, rootUrl, UserService){
     $scope.submitPost = function() {
 
-        var tagList;
+        var tagString = "default";
 
-        if (typeof $scope.tags == 'undefined'){
-            tagList[0] = "default";
-        }
+        if (typeof $scope.tags == 'undefined')
+            tagString = $scope.tags;
 
-        else{
-            // title, body, tags (array of tagnames)
-            tagList = $scope.tags.split(',');
-            var i;
-            // Force lowercase, trim spaces
-            for(i = 0; i < tagList.length; i++) {
-                tagList[i] = tagList[i].trim().toLowerCase();
-            }
+        // title, body, tags (array of tagnames)
+        var tagList = tagString.split(',');
+        var i;
+        // Force lowercase, trim spaces
+        for(i = 0; i < tagList.length; i++) {
+            tagList[i] = tagList[i].trim().toLowerCase();
         }
 
         var request = {title:$scope.title, body:$scope.body, tags:tagList};
