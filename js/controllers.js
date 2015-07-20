@@ -47,10 +47,7 @@ angular.module('taggit')
     .controller('new_postController', function($scope, $http, $location, rootUrl, UserService){
     $scope.submitPost = function() {
 
-        var tagString = "default";
-
-        if (typeof $scope.tags == 'undefined')
-            tagString = $scope.tags;
+        var tagString = $scope.tags || 'default';
 
         // title, body, tags (array of tagnames)
         var tagList = tagString.split(',');
