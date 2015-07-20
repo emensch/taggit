@@ -50,6 +50,11 @@ angular.module('taggit')
         var tagList = $scope.tags.split(',');
         var i;
         // Force lowercase, trim spaces
+
+        if (tagList.length == 0){
+            tagList[0] = "default";
+        }
+
         for(i = 0; i < tagList.length; i++) {
             tagList[i] = tagList[i].trim().toLowerCase();
         }
@@ -137,9 +142,9 @@ angular.module('taggit')
     $scope.delete = function(postID){
         $http.delete(rootUrl + '/posts/'+postID).
         success(function(){
-            console.log("POST DELETED WITH ID " + postID);   
+            console.log("POST DELETED WITH ID " + postID);
         }).error(function(){
-            console.log("POST DELETE UNSUCCESSFUL")   
+            console.log("POST DELETE UNSUCCESSFUL")
         });
     }
 })
@@ -150,7 +155,7 @@ angular.module('taggit')
     $http.get(rootUrl + '/users/'+UserService.userID+'/comments').
     success(function(data){
         $scope.comments = data;
-    });        
+    });
 })
 
 
@@ -183,7 +188,7 @@ angular.module('taggit')
                         $scope.$parent.topTags.push(obj);
                     }
                 }
-            });            
+            });
         });
     }
 
@@ -201,7 +206,7 @@ angular.module('taggit')
                         $scope.$parent.topTags.push(obj);
                     }
                 }
-            });   
+            });
         });
     }
 
@@ -209,7 +214,7 @@ angular.module('taggit')
         var request = {onTop:0}
         $http.put(rootUrl + '/subscriptions/'+tagID,request).
         success(function(){
-            
+
             $http.get(rootUrl + '/users/' + UserService.userID).
             success(function(data) {
                 $scope.$parent.topTags = [];
@@ -220,7 +225,7 @@ angular.module('taggit')
                         $scope.$parent.topTags.push(obj);
                     }
                 }
-            });   
+            });
         });
     }
 
@@ -238,7 +243,7 @@ angular.module('taggit')
     $scope.subscribe = function(){
         var request = {tagName:name};
         $http.post(rootUrl + '/subscriptions',request).
-        success(function(){ 
+        success(function(){
             $http.get(rootUrl + '/users/' + UserService.userID).
             success(function(data) {
                 $scope.$parent.topTags = [];
@@ -249,7 +254,7 @@ angular.module('taggit')
                         $scope.$parent.topTags.push(obj);
                     }
                 }
-            });   
+            });
         });
     }
 
@@ -291,7 +296,7 @@ angular.module('taggit')
                 $scope.comments = data;
             });
         });
-    }  
+    }
 })
 
 
@@ -319,7 +324,7 @@ angular.module('taggit')
     //        $scope.selectedIndex = $index;
     //    };
 
-    $scope.logout = function() {        
+    $scope.logout = function() {
         $http.post(rootUrl + '/logout').
         success(function(data) {
             UserService.updateUserID(0);
@@ -339,7 +344,7 @@ angular.module('taggit')
             $scope.post.votes = parseInt($scope.post.votes)+1;
         } else if ($scope.post.voteValue == -1){
             $scope.sendVote(1);
-            $scope.post.voteValue = 1 
+            $scope.post.voteValue = 1
             $scope.post.votes = parseInt($scope.post.votes)+2;
         } else {
             $scope.sendVote(0);
@@ -351,11 +356,11 @@ angular.module('taggit')
     $scope.downvote = function() {
         if($scope.post.voteValue == 0) {
             $scope.sendVote(-1);
-            $scope.post.voteValue = -1 
+            $scope.post.voteValue = -1
             $scope.post.votes -= 1;
         } else if ($scope.post.voteValue == 1){
             $scope.sendVote(-1);
-            $scope.post.voteValue = -1 
+            $scope.post.voteValue = -1
             $scope.post.votes -= 2;
         } else {
             $scope.sendVote(0);
